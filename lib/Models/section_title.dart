@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class SectionTitle extends StatelessWidget {
+  final Color color;
   const SectionTitle({
     Key key,
     @required this.title,
+    this.color,
     @required this.press,
   }) : super(key: key);
 
@@ -19,7 +21,7 @@ class SectionTitle extends StatelessWidget {
           title,
           style: TextStyle(
             fontSize: (18),
-            color: Colors.white,
+            color: color,
             fontWeight: FontWeight.bold,
           ),
         ),

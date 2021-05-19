@@ -1,5 +1,7 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:gradproject/Admin/adminLogin.dart';
 import 'package:gradproject/Store/Home.dart';
 import 'package:gradproject/Widgets/customTextField.dart';
 import 'package:gradproject/DialogBox/errorDialog.dart';
@@ -8,15 +10,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Store/SciencePage.dart';
 import 'package:gradproject/Config/config.dart';
-
+import "dart:core";
 
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
-
-
-
 
 
 class _LoginState extends State<Login>
@@ -58,12 +57,14 @@ class _LoginState extends State<Login>
                     data: Icons.email,
                     hintText: "Email",
                     isObsecure: false,
+                    specifer:1,
                   ),
                   CustomTextField(
                     controller: _passwordtextEditingController,
                     data: Icons.lock,
                     hintText: "Password",
                     isObsecure: true,
+                    specifer:1,
                   ),
 
                 ],
@@ -100,14 +101,6 @@ class _LoginState extends State<Login>
             SizedBox(
               height: 10.0,
             ),
-            FlatButton.icon(
-              onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminSignInPage()));
-
-              },
-              icon: Icon(Icons.nature_people ,color: Colors.pink,),
-              label: Text("I`m Admin",style: TextStyle(color: Colors.pink, fontWeight: FontWeight.bold),),
-            ),
 
           ],
         ),
@@ -116,9 +109,14 @@ class _LoginState extends State<Login>
   }
   FirebaseAuth _auth = FirebaseAuth.instance;
  void loginUser() async {
-    showDialog(context: context, builder: (c){
+   // Timer(Duration(seconds: 20), ()=>print("20
+   // seconds 20 seconds   20 seconds 20 seconds  20 seconds 20 seconds  20 seconds 20 seconds"),);
+
+ showDialog(context: context, builder: (c){
       return LoadingAlertDialog(message: "Authenticating , Please Wait",);
     });
+
+
     FirebaseUser firebaseUser;
     await _auth.signInWithEmailAndPassword(
       email: _emailtextEditingController.text.trim() ,
@@ -151,15 +149,21 @@ class _LoginState extends State<Login>
   }
   Future readData(FirebaseUser fUser) async
   {
+
+
+
+
+
+
+
     Firestore.instance.collection("users").document(fUser.uid).get().then((dataSnapshot)
     async {
-      await EcommerceApp.sharedPreferences.setString(EcommerceApp.userUID, dataSnapshot.data[EcommerceApp.userUID]);
-      await EcommerceApp.sharedPreferences.setString(EcommerceApp.userEmail,dataSnapshot.data[EcommerceApp.userEmail]);
-      await EcommerceApp.sharedPreferences.setString(EcommerceApp.userName, dataSnapshot.data[EcommerceApp.userName]);
-      await EcommerceApp.sharedPreferences.setString(EcommerceApp.userAvatarUrl, dataSnapshot.data[EcommerceApp.userAvatarUrl]);
-      List  <String> cartList = dataSnapshot.data[EcommerceApp.userCartList].cast<String>();
-      await EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList,cartList);
-
+      await BookStore.sharedPreferences.setString(BookStore.phoneNumber, dataSnapshot.data[BookStore.phoneNumber]);
+      await BookStore.sharedPreferences.setString(BookStore.userPassword, dataSnapshot.data[BookStore.userPassword]);
+      await BookStore.sharedPreferences.setString(BookStore.userAvatarUrl, dataSnapshot.data[BookStore.userAvatarUrl]);
+      await BookStore.sharedPreferences.setString(BookStore.userUID, dataSnapshot.data[BookStore.userUID]);
+      await BookStore.sharedPreferences.setString(BookStore.userEmail,dataSnapshot.data[BookStore.userEmail]);
+      await BookStore.sharedPreferences.setString(BookStore.userName, dataSnapshot.data[BookStore.userName]);
 
     } );
 

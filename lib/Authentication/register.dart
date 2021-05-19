@@ -18,14 +18,13 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  final TextEditingController _nametextEditingController =
-      TextEditingController();
+  final TextEditingController _nametextEditingController = TextEditingController();
   final TextEditingController _emailtextEditingController =
       TextEditingController();
   final TextEditingController _passwordtextEditingController =
       TextEditingController();
-  final TextEditingController _cpasswordtextEditingController =
-      TextEditingController();
+  final TextEditingController _numberTextEditingController=TextEditingController();
+  final TextEditingController _cpasswordtextEditingController = TextEditingController();
   final GlobalKey<FormState> _fromkey = GlobalKey<FormState>();
   String userImageUrl = "";
   File _imageFile;
@@ -38,23 +37,20 @@ class _RegisterState extends State<Register> {
       child: Container(
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBox(
-              height: 8.0,
-            ),
+          children: <Widget>[
+             SizedBox(
+               height: 8.0,
+             ),
             InkWell(
-              onTap: _selectAndPickImage,
+              onTap:()=>_showPicker(context),
               child: CircleAvatar(
-                radius: _screenWidth * 0.15,
+                radius: _screenWidth * 0.18,
                 backgroundColor: Colors.white,
-                backgroundImage:
-                    _imageFile == null ? null : FileImage(_imageFile),
-                child: _imageFile == null
-                    ? Icon(
-                        Icons.add_photo_alternate,
-                        size: _screenWidth * 0.15,
-                        color: Colors.grey,
-                      )
+                backgroundImage: _imageFile == null?null:FileImage(_imageFile),
+                 child: _imageFile == null ? Icon(Icons.add_a_photo_outlined,
+                         size: _screenWidth * 0.18,
+                         color: Colors.blueAccent,
+                       )
                     : null,
               ),
             ),
@@ -66,27 +62,38 @@ class _RegisterState extends State<Register> {
               child: Column(
                 children: [
                   CustomTextField(
+                    specifer:1,
                     controller: _nametextEditingController,
                     data: Icons.person,
                     hintText: "Name",
                     isObsecure: false,
                   ),
                   CustomTextField(
+                    specifer:1,
                     controller: _emailtextEditingController,
                     data: Icons.email,
                     hintText: "Email",
                     isObsecure: false,
                   ),
                   CustomTextField(
+                    specifer:0,
+                    controller: _numberTextEditingController,
+                    data: Icons.phone,
+                    hintText: "Phone Number : ",
+                    isObsecure: false,
+                  ),
+                  CustomTextField(
+                    specifer:1,
                     controller: _passwordtextEditingController,
                     data: Icons.lock,
-                    hintText: "Password",
+                    hintText: "Password : ",
                     isObsecure: true,
                   ),
                   CustomTextField(
+                    specifer:1,
                     controller: _cpasswordtextEditingController,
                     data: Icons.lock,
-                    hintText: "Confirm Password",
+                    hintText: "Confirm Password : ",
                     isObsecure: true,
                   ),
                 ],
@@ -119,8 +126,55 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Future<void> _selectAndPickImage() async {
-    _imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+  _imgFromCamera() async {
+    File image = await ImagePicker.pickImage(
+        source: ImageSource.camera, imageQuality: 50
+    );
+
+    setState(() {
+      _imageFile = image;
+    });
+  }
+
+  _imgFromGallery() async {
+    File image = await  ImagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: 50
+    );
+
+    setState(() {
+      _imageFile = image;
+    });
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Take a profile photo from Gallery'),
+                      onTap: () {
+                        _imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Take a profile photo from Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+    );
   }
 
   Future<void> uploadAndSaveImage() {
@@ -137,6 +191,7 @@ class _RegisterState extends State<Register> {
       _passwordtextEditingController.text == _cpasswordtextEditingController.text
           ? _emailtextEditingController.text.isNotEmpty &&
                   _passwordtextEditingController.text.isNotEmpty &&
+                    _numberTextEditingController.text.isNotEmpty &&
                   _cpasswordtextEditingController.text.isNotEmpty &&
                   _nametextEditingController.text.isNotEmpty
               ? uploadToStorge()
@@ -176,6 +231,12 @@ class _RegisterState extends State<Register> {
   }
 
   FirebaseAuth _auth = FirebaseAuth.instance;
+
+
+
+
+
+
   void _registerUser() async {
     FirebaseUser firebaseUser;
     await _auth
@@ -185,6 +246,7 @@ class _RegisterState extends State<Register> {
     )
         .then((auth) {
       firebaseUser = auth.user;
+     // EcommerceApp.forProfile=auth.user;
     }).catchError((error) {
       Navigator.pop(context);
       showDialog(
@@ -212,14 +274,17 @@ class _RegisterState extends State<Register> {
      "email": fuser.email,
      "name": _nametextEditingController.text.trim(),
      "url": userImageUrl,
-
+     "phoneNumber":_numberTextEditingController.text.trim(),
+     "password":_passwordtextEditingController.text.trim(),
 
 
    });
-   await EcommerceApp.sharedPreferences.setString(EcommerceApp.userUID, fuser.uid);
-   await EcommerceApp.sharedPreferences.setString(EcommerceApp.userEmail, fuser.email);
-   await EcommerceApp.sharedPreferences.setString(EcommerceApp.userName, _nametextEditingController.text);
-   await EcommerceApp.sharedPreferences.setString(EcommerceApp.userAvatarUrl, userImageUrl);
+   await BookStore.sharedPreferences.setString(BookStore.userUID, fuser.uid);
+   await BookStore.sharedPreferences.setString(BookStore.userEmail,_emailtextEditingController.text);
+   await BookStore.sharedPreferences.setString(BookStore.userPassword, _passwordtextEditingController.text);
+   await BookStore.sharedPreferences.setString(BookStore.userName, _nametextEditingController.text);
+   await BookStore.sharedPreferences.setString(BookStore.userAvatarUrl, userImageUrl);
+   await BookStore.sharedPreferences.setString(BookStore.phoneNumber, _numberTextEditingController.text);
 
 
 

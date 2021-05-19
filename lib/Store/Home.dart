@@ -1,21 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gradproject/Models/Book.dart';
 import 'package:gradproject/Models/section_title.dart';
+import 'package:gradproject/ProfilePage/DataUser.dart';
+import 'package:gradproject/Store/MyBook.dart';
+import 'package:gradproject/Store/NovelPage.dart';
+import 'package:gradproject/Store/TawjihiPage.dart';
 import 'package:gradproject/Store/product_page.dart';
-import 'package:gradproject/Counters/cartitemcounter.dart';
 import 'package:gradproject/Store/SciencePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
+import 'package:gradproject/Widgets/CustomBottomNavBar.dart';
+import 'package:gradproject/Widgets/customAppBar.dart';
+import 'package:intl/intl.dart';
 import 'package:gradproject/Config/config.dart';
 import '../Widgets/loadingWidget.dart';
-import '../Widgets/myDrawer.dart';
-import '../Widgets/searchBox.dart';
-import '../Models/item.dart';
 
 
 double width;
+double height;
 
 class Home extends StatefulWidget {
   @override
@@ -23,148 +26,159 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
+   height= MediaQuery.of(context).size.height;
     return SafeArea(
-      child: Container(
-        decoration: new BoxDecoration(
-          gradient: new LinearGradient(
-            colors: [Colors.pinkAccent, Colors.lightGreenAccent],
-            begin: const FractionalOffset(0.0, 0.0),
-            end: const FractionalOffset(1.0, 0.0),
-            stops: [0.0, 1.0],
-            tileMode: TileMode.clamp,
-          ),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
+      child: Scaffold(
+        appBar: MyAppBar(),
+        // drawer: ClipRRect(
+        //   borderRadius: BorderRadius.only(
+        //       topRight: Radius.circular(44), bottomRight: Radius.circular(44)),
+        //   child: MyDrawer(),),
 
-          appBar: AppBar(
-            flexibleSpace: Container(
-              decoration: new BoxDecoration(
-                gradient: new LinearGradient(
-                  colors: [Colors.pink, Colors.lightGreenAccent],
-                  begin: const FractionalOffset(0.0, 0.0),
-                  end: const FractionalOffset(1.0, 0.0),
-                  stops: [0.0, 1.0],
-                  tileMode: TileMode.clamp,
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: height*0.01,),
+              Container(
+                width:width,
+                height: height*0.14,
+                child: CustomScrollView(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  slivers: [
+                    StreamBuilder<QuerySnapshot>(
+                      stream: Firestore.instance
+                          .collection("users")
+                          .snapshots(),
+                      builder: (context, dataSnapShot) {
+                        return !dataSnapShot.hasData
+                            ? SliverToBoxAdapter(
+                              child: Center(
+                            child: circularProgress(),
+                          ),
+                        )
+                            : SliverStaggeredGrid.countBuilder(
+                          crossAxisCount: 1,
+                          staggeredTileBuilder: (c) => StaggeredTile.fit(1),
+                          itemBuilder: (context, index) {
+                          DataUser user = DataUser.fromJson(
+                                dataSnapShot.data.documents[index].data);
+                            return DisplayForUser(user, context);
+                          },
+                          itemCount:dataSnapShot.data.documents.length,
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
-            ),
-            title: Text(
-              "Book Store",
-              style: TextStyle(
-                fontSize: 55.0,
-                color: Colors.white,
-                fontFamily: "Signatra",
-              ),
-            ),
-            centerTitle: true,
-
-
-          ),
-          drawer: MyDrawer(),
-          body: SafeArea(child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: (30)),
-                Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.all(20.0),
-                  padding: EdgeInsets.symmetric(
-                    horizontal:20.0 ,
-                    vertical: 20.0,
+              // Container(
+              //   width: double.infinity,
+              //   margin: EdgeInsets.all(20.0),
+              //   padding: EdgeInsets.symmetric(
+              //     horizontal:10.0 ,
+              //     vertical: 10.0,
+              //   ),
+              //   decoration: BoxDecoration(
+              //     color: Colors.cyan,
+              //     borderRadius: BorderRadius.circular(20),
+              //   ),
+              //   child: Text.rich(
+              //     TextSpan(
+              //       style: TextStyle(color: Colors.white),
+              //       children: [
+              //         TextSpan(text: "Book Store\n"),
+              //         TextSpan(
+              //           text: "Welcome To Our Book Store",
+              //           style: TextStyle(
+              //             fontSize: 30,
+              //             fontWeight: FontWeight.bold,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              //SizedBox(height: (5)),
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: (20)),
+                    child: SectionTitle(
+                     color: Colors.blue,
+                      title: "Special for you",
+                      press: () {},
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    color: Color(0xFF4A3298),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text.rich(
-                    TextSpan(
-                      style: TextStyle(color: Colors.white),
+                  SizedBox(height: (5)),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
                       children: [
-                        TextSpan(text: "Book Store\n"),
-                        TextSpan(
-                          text: "Welcome To Our Book Store",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        SpecialOfferCard(
+                          image: "images/Image Banner 3.png",
+                          category: "Science",
+                          press: () {
+                            Route route = MaterialPageRoute(builder:(context)=>SciencePage());
+                            Navigator.push(context, route);},
+                        ),
+                        SpecialOfferCard(
+                          image: "images/Image Banner 2.jpg",
+                          category: "Novels",
+                          press: () {
+                            Route route = MaterialPageRoute(builder:(context)=>NovelsPage());
+                          Navigator.push(context, route);},
+                        ),
+                        SpecialOfferCard(
+                          image: "images/Image Banner 4.PNG",
+                          category: "Tawijehi",
+                          press: () { Route route = MaterialPageRoute(builder:(context)=>TawjihiPage());
+                          Navigator.push(context, route);},
+                        ),SpecialOfferCard(
+                          image: "images/Image Banner 5.png",
+                          category: "PDF",
+                          press: () {
+                            print("height: $height ................. width :$width");},
                         ),
                       ],
                     ),
                   ),
 
-
+                ],
+              ),
+              SizedBox(height: (15)),
+              Column(children: [
+                Padding(
+                  padding:
+                  EdgeInsets.symmetric(horizontal: (20)),
+                  child: SectionTitle(title: "Recent Books", color: Colors.blue,press: () {}),
                 ),
-                SizedBox(height: (30)),
-                Column(
-                  children: [
-                    Padding(
-                      padding:
-                      EdgeInsets.symmetric(horizontal: (20)),
-                      child: SectionTitle(
-                        title: "Special for you",
-                        press: () {},
-                      ),
-                    ),
-                    SizedBox(height: (20)),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          SpecialOfferCard(
-                            image: "images/Image Banner 3.png",
-                            category: "Science",
-                            numOfBrands: 24,
-                            press: () {
-                              Route route = MaterialPageRoute(builder: (_) => StoreHome());
-                            Navigator.pushReplacement(context, route);},
-                          ),
-                          SpecialOfferCard(
-                            image: "images/Image Banner 2.jpg",
-                            category: "Novels",
-                            numOfBrands: 18,
-                            press: () { print("clicked");},
-                          ),
-                          SpecialOfferCard(
-                            image: "images/Image Banner 4.PNG",
-                            category: "Tawijehi",
-                            numOfBrands: 29,
-                            press: () { print("clicked");},
-                          ),SpecialOfferCard(
-                            image: "images/Image Banner 5.png",
-                            category: "PDF",
-                            numOfBrands: 100,
-                            press: () {
-                              print("clicked");},
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: (30)),
-
-                Column(children: [
-                  Padding(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: (20)),
-                    child: SectionTitle(title: "Recent Products", press: () {}),
-                  ),
-                  SizedBox(height: (20)),
-                  Container(
-                    width: 400,
-                    height: 400,
+                SizedBox(height:5,),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: (5)),
+                  child: Container(
+                    width:width,
+                    height:height*0.45,
                     child: CustomScrollView(
-                      scrollDirection: Axis.vertical,
+                      scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
                       slivers: [
                         StreamBuilder<QuerySnapshot>(
                           stream: Firestore.instance
-                              .collection("items")
-                              .limit(5)
+                              .collection("Books")
+                              .limit(6)
                               .orderBy("publishedDate", descending: true)
                               .snapshots(),
                           builder: (context, dataSnapShot) {
@@ -178,7 +192,7 @@ class _HomeState extends State<Home> {
                               crossAxisCount: 1,
                               staggeredTileBuilder: (c) => StaggeredTile.fit(1),
                               itemBuilder: (context, index) {
-                                ItemModel model = ItemModel.fromJson(
+                                Book model = Book.fromJson(
                                     dataSnapShot.data.documents[index].data);
                                 return sourceInfo(model, context);
                               },
@@ -189,120 +203,118 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
-
-
-                ],
-
                 ),
 
-
-
-
-
-
-
-
               ],
-            ),
-          )),
+
+              ),
+
+            ],
+          ),
         ),
+        bottomNavigationBar: CustomBottomNavBar(selectedMenu: MenuState.Home),
+
+
       ),
     );
   }
 
 }
-Widget sourceInfo(ItemModel model, BuildContext context,
+
+
+Widget DisplayForUser(DataUser dataUser,BuildContext context)
+{
+
+return InkWell(
+
+  onTap:(){
+    return Navigator.push(context, MaterialPageRoute(builder:(context)=>MyBook(dataUser:dataUser)));
+    },
+  child:   Column(
+    children: <Widget>[
+      CircleAvatar(
+        radius: 31.5,
+        backgroundColor: Colors.blue,
+        child: CircleAvatar(
+          radius: 30.0,
+          backgroundImage: NetworkImage(dataUser.url),
+          backgroundColor: Colors.transparent,
+        ),
+      ),
+      Text(dataUser.Name),
+    ],
+  ),
+);
+}
+
+Widget sourceInfo(Book model, BuildContext context,
     {Color background, removeCartFunction}) {
   return InkWell(
     onTap: (){
-      Route route = MaterialPageRoute(builder: (c)=> ProductPage(itemModel : model) );
-      Navigator.pushReplacement(context, route);
+      Route route = MaterialPageRoute(builder: (c)=> ProductPage(BookModel : model) );
+      Navigator.push(context, route);
     },
-    splashColor: Colors.pink,
+    splashColor: Colors.purpleAccent,
     child: Padding(
-      padding: EdgeInsets.all(6.0),
+      padding: EdgeInsets.all(3.0),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          color: Colors.blue,
-          gradient: new LinearGradient(
-            colors: [Colors.lightGreenAccent, Colors.pinkAccent],
-            begin: const FractionalOffset(0.0, 1),
-            end: const FractionalOffset(1.0, 0.0),
-            stops: [0.0, 1.0],
-            tileMode: TileMode.clamp,
-          ),
+          borderRadius: BorderRadius.circular(40),
+          color: Color(0xff122636),
         ),
-        height: 190,
-        width: width,
+       // height: height*0.349,
+       // width: width,
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(0),
           child: Row(
             children: [
-              Image.network(
-                model.thumbnailUrl,
-                width: 140.0,
-                height: 140.0,
+              CircleAvatar(
+            radius: 70.0,
+            backgroundImage:
+            NetworkImage( model.thumbnailUrl[0]),
+            backgroundColor: Colors.transparent,
 
               ),
               SizedBox(
-                width: 10.0,
+                width: width*0.01,
               ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: 50.0,
-                    ),
-                    Container(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-
-
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Expanded(
-                            child: Text(
-                              model.title,
-                              style:
-                              TextStyle(color: Colors.black, fontSize: 16.0, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height:10.0,
-                    ),
-                    Container(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Expanded(
-                            child: Text(
-                              model.shortInfo,
-                              style: TextStyle(
-                                  color: Colors.black45, fontSize: 14.0),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
                       height: 10.0,
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          SizedBox(
+                            width: 5.0,
+                          ),
+                          Text(
+                              "Name :",
+                              style:
+                              TextStyle(color: Colors.black54, fontSize: 14.0, fontWeight: FontWeight.normal,)
+                          ),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Expanded(
+                            child: Text(
+                              model.newTitle,
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold,)
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height:5.0,
                     ),
                     Row(
                       children: [
-
-                        SizedBox(
-                          width: 10.0,
-                        ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -311,18 +323,43 @@ Widget sourceInfo(ItemModel model, BuildContext context,
                               child: Row(
                                 children: [
                                   Text(
-                                    r"Price : $ ",
+                                    "Price : JD ",
                                     style: TextStyle(
                                       fontSize: 14.0,
-                                      color: Colors.grey,
+                                      color: Colors.black54,
                                     ),
                                   ),
                                   Text(
-                                    (model.price ).toString(),
+                                    (model.price.toString()),
                                     style: TextStyle(
                                       fontSize: 15.0,
-                                      color: Colors.grey,
-                                      decoration: TextDecoration.lineThrough,
+                                      color: Colors.white,
+                                     // decoration: TextDecoration.lineThrough,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5.0,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 5.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "City : ",
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                  Text(
+                                    (model.city ).toString(),
+                                    style: TextStyle(
+                                      fontSize: 15.0,
+                                      color: Colors.white,
+                                   // decoration: TextDecoration.lineThrough,
 
                                     ),
                                   ),
@@ -330,11 +367,54 @@ Widget sourceInfo(ItemModel model, BuildContext context,
                               ),
                             ),
 
+                            SizedBox(
+                              height: 5.0,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 5.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    ("purpose : "),
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Text(
+                              (model.purpose),
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 10.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    (DateFormat("d/M/y :").add_jm().format(model.publishedDate.toDate()).toString()),
+                                    style: TextStyle(
+                                      fontSize: 12.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+
                           ],
                         ),
                       ],
                     ),
-                    Flexible(child: Container()),
                   ],
                 ),
               ),
@@ -351,12 +431,10 @@ class SpecialOfferCard extends StatelessWidget {
     Key key,
     @required this.category,
     @required this.image,
-    @required this.numOfBrands,
     @required this.press,
   }) : super(key: key);
 
   final String category, image;
-  final int numOfBrands;
   final GestureTapCallback press;
 
   @override
@@ -406,7 +484,6 @@ class SpecialOfferCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        TextSpan(text: "$numOfBrands Brands")
                       ],
                     ),
                   ),
@@ -418,10 +495,5 @@ class SpecialOfferCard extends StatelessWidget {
       ),
     );
   }
-}
-
-
-Widget card({Color primaryColor = Colors.redAccent, String imgPath}) {
-  return Container();
 }
 

@@ -1,32 +1,56 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ItemModel {
+class Book {
+  //String searchKey;
+  String purpose;
+  String userUID;
+  String bookId;
   String title;
-  String shortInfo;
   Timestamp publishedDate;
-  String thumbnailUrl;
-  String longDescription;
+  List thumbnailUrl; //thumbnailUrl
+  String description;
   String status;
   int price;
   String category;
   String city;
-  ItemModel(
-      {this.title,
-        this.shortInfo,
+  String upperCaseTitle;
+  String lowerCaseTitle;
+  String newTitle;
+
+  Book(
+      {
+        this.bookId,
+        this.userUID,
+        this.newTitle,
+        this.lowerCaseTitle,
+        this.upperCaseTitle,
+        this.title,
         this.publishedDate,
         this.thumbnailUrl,
-        this.longDescription,
+        this.description,
         this.status,
         this.category,
         this.city,
         });
 
-  ItemModel.fromJson(Map<String, dynamic> json) {
+  Book.fromJson(Map<String, dynamic> json)
+  {
+    //String upperCaseTitle,lowerCaseTitle,newTitle;
     title = json['title'];
-    shortInfo = json['shortInfo'];
+    upperCaseTitle=title.substring(0,1).toUpperCase();
+    lowerCaseTitle=title.substring(1).toLowerCase();
+    newTitle=upperCaseTitle+lowerCaseTitle;
+    //searchKey=newTitle.substring(0,1);
+
+
+    //shortInfo = json['shortInfo'];
+    purpose= json['purpose'];
+    bookId=json['bookId'];
+    userUID=json['uid'];
     publishedDate = json['publishedDate'];
+
     thumbnailUrl = json['thumbnailUrl'];
-    longDescription = json['longDescription'];
+    description = json['description'];
     status = json['status'];
     price = json['price'];
     category = json['category'];
@@ -37,13 +61,16 @@ class ItemModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title'] = this.title;
-    data['shortInfo'] = this.shortInfo;
+    data['bookId']=this.bookId;
+    data['purpose']=this.purpose;
+    data['uid']=this.userUID;
+   // data['shortInfo'] = this.shortInfo;
     data['price'] = this.price;
     if (this.publishedDate != null) {
       data['publishedDate'] = this.publishedDate;
     }
     data['thumbnailUrl'] = this.thumbnailUrl;
-    data['longDescription'] = this.longDescription;
+    data['description'] = this.description;
     data['status'] = this.status;
     data['category']=this.category;
     data['city']=this.city;
