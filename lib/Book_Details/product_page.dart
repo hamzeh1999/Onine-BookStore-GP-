@@ -1,11 +1,11 @@
 import 'package:gradproject/Config/config.dart';
-import 'package:gradproject/Store/BookModificationPage.dart';
-import 'package:gradproject/Store/picturePage.dart';
 import 'package:gradproject/Widgets/customAppBar.dart';
 import 'package:gradproject/Widgets/myDrawer.dart';
 import 'package:gradproject/Models/Book.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:gradproject/Book_Details/BookModificationPage.dart';
+import 'package:gradproject/Book_Details/picturePage.dart';
 
 class ProductPage extends StatefulWidget {
   final Book BookModel;

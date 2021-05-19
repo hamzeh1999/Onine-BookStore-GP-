@@ -24,7 +24,10 @@ class _MyEmailState extends State<MyEmail> {
   final TextEditingController _emailtextEditingController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
+    Size screenSize = MediaQuery.of(context).size;
+
     return SafeArea(
       child:Scaffold(
         appBar: MyAppBar(),
@@ -36,13 +39,13 @@ class _MyEmailState extends State<MyEmail> {
           child: Column(
             children: [
               SizedBox(
-                height: height * 0.09,
+                height: screenSize.height * 0.09,
               ),
               Row(
                 children: [
-                  SizedBox(width: width*0.05,),
+                  SizedBox(width: screenSize.width*0.05,),
                   Text("Your Email : ",style: TextStyle(fontSize: 20,color: Colors.black),),
-                  SizedBox(width: width*0.02,),
+                  SizedBox(width: screenSize.width*0.02,),
                   Text(widget.user.Email,style: TextStyle(
                     fontSize: 20,
                     color: Colors.black,
@@ -52,7 +55,7 @@ class _MyEmailState extends State<MyEmail> {
                 ],
               ),
               SizedBox(
-                height: height * 0.04,
+                height: screenSize.height * 0.04,
               ),
               CustomTextField(
                 data: Icons.email_outlined,
@@ -62,7 +65,7 @@ class _MyEmailState extends State<MyEmail> {
                 controller:_emailtextEditingController,
               ),
               SizedBox(
-                height: height * 0.09,
+                height: screenSize.height * 0.09,
               ),
 
               ElevatedButton(

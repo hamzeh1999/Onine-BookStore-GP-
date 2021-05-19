@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gradproject/Store/Home.dart';
-import 'package:gradproject/Store/product_page.dart';
+import 'file:///D:/GradProject/lib/Book_Details/product_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -23,7 +23,9 @@ class SciencePage extends StatefulWidget {
 class _SciencePageState extends State<SciencePage> {
   @override
   Widget build(BuildContext context) {
-  //  width = MediaQuery.of(context).size.width;
+    Size screenSize = MediaQuery.of(context).size;
+
+    //  width = MediaQuery.of(context).size.width;
    // height = MediaQuery.of(context).size.height;
 
     return SafeArea(
@@ -40,7 +42,7 @@ class _SciencePageState extends State<SciencePage> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height:height*0.001),
+                SizedBox(height:screenSize.height*0.001),
                 Container(
                   width: double.infinity,
                   margin: EdgeInsets.all(15.0),
@@ -73,8 +75,8 @@ class _SciencePageState extends State<SciencePage> {
 
                 ),
                 Container(
-                  width: width*4.0,
-                  height:height*0.66,
+                  width: screenSize.width*4.0,
+                  height:screenSize.height*0.66,
                   child: CustomScrollView(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
@@ -116,117 +118,7 @@ class _SciencePageState extends State<SciencePage> {
     );
   }
 }
-// Widget sourceInfo(ItemModel model, BuildContext context,
-//     {Color background}) {
-//   return InkWell(
-//     onTap: (){
-//       Route route = MaterialPageRoute(builder: (c)=> ProductPage(itemModel : model) );
-//       Navigator.pushReplacement(context, route);
-//     },
-//     splashColor: Colors.pink,
-//     child: Container(
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(30),
-//         //color: Colors.blue,
-//         gradient: new LinearGradient(
-//           colors: [Colors.lightGreenAccent, Colors.pinkAccent],
-//           begin: const FractionalOffset(0.0, 1),
-//           end: const FractionalOffset(1.0, 0.0),
-//           stops: [0.0, 1.0],
-//           tileMode: TileMode.clamp,
-//         ),
-//       ),
-//      // height: height*0.31,
-//       width: double.infinity,
-//       margin: EdgeInsets.all(5.0),
-//       padding: EdgeInsets.symmetric(
-//         horizontal:10.0 ,
-//         vertical: 10.0,
-//       ),
-//       child: Row(
-//         children: [
-//           Image.network(
-//             model.thumbnailUrl,
-//             width: 140.0,
-//             height: 140.0,
-//
-//           ),
-//
-//
-//           SizedBox(
-//             width: 1.0,
-//           ),
-//           Expanded(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 SizedBox(
-//                   height: 50.0,
-//                 ),
-//                 Container(
-//                   child: Row(
-//                     mainAxisSize: MainAxisSize.max,
-//                     children: [
-//                       SizedBox(
-//                         width: 10.0,
-//                       ),
-//                       Expanded(
-//                         child: Text(
-//                           model.title,
-//                           style:
-//                           TextStyle(color: Colors.black, fontSize: 16.0, fontWeight: FontWeight.bold),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//                 SizedBox(
-//                   height: 10.0,
-//                 ),
-//                 Row(
-//                   children: [
-//
-//                     SizedBox(
-//                       width: 10.0,
-//                     ),
-//                     Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         Padding(
-//                           padding: EdgeInsets.only(top: 3.0),
-//                           child: Row(
-//                             children: [
-//                               Text(
-//                                 r"Price :$",
-//                                 style: TextStyle(
-//                                   fontSize: 14.0,
-//                                   color: Colors.black,
-//                                 ),
-//                               ),
-//                               Text(
-//                                 (model.price ).toString(),
-//                                 style: TextStyle(
-//                                   fontSize: 15.0,
-//                                   color: Colors.black,
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//                // Flexible(child: Container()),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     ),
-//   );
-// }
+
 
 
 

@@ -7,19 +7,19 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gradproject/DialogBox/errorDialog.dart';
 import 'package:gradproject/DialogBox/loadingDialog.dart';
 import 'package:gradproject/ProfilePage/DataUser.dart';
-import 'package:gradproject/Store/product_page.dart';
+import 'package:gradproject/Store/Home.dart';
+import 'file:///D:/GradProject/lib/Book_Details/product_page.dart';
 import 'package:gradproject/Widgets/customAppBar.dart';
 import 'package:gradproject/Widgets/customTextField.dart';
 import 'package:gradproject/Widgets/myDrawer.dart';
 import 'package:gradproject/Config/config.dart';
-import 'package:gradproject/Store/BookModificationPage.dart';
+import 'file:///D:/GradProject/lib/Book_Details/BookModificationPage.dart';
 import 'package:gradproject/Widgets/customAppBar.dart';
 import 'package:gradproject/Widgets/myDrawer.dart';
 import 'package:gradproject/Models/Book.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'Home.dart';
 
 
 class BookModificationPage extends StatefulWidget {

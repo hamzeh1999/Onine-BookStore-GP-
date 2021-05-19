@@ -61,7 +61,7 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
                // color: Colors.blueGrey,
                 child:InkWell(
                     onTap: (){
-                      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>SearchProduct()));
+                      Navigator.push(context,MaterialPageRoute(builder: (context)=>SearchProduct()));
                     },
                     child: Container(
                       width: width*0.5,
@@ -125,14 +125,15 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
 
 
 Widget smallPicture(DataUser dataUser,BuildContext context)
-{
-  return Material(
+{  Size screenSize = MediaQuery.of(context).size;
+
+return Material(
     color: Colors.white,
     borderRadius: BorderRadius.all(Radius.circular(90.0)),
      elevation: 8.0,
     child: Container(
-      height: height*0.01,
-      width: width*0.01,
+      height: screenSize.height*0.01,
+      width: screenSize.width*0.01,
       child: InkWell(
         child: CircleAvatar(
           radius: 27,

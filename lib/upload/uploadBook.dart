@@ -18,7 +18,6 @@ import 'package:gradproject/main.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:image/image.dart' as ImD;
 import 'package:intl/intl.dart';
 
@@ -69,7 +68,8 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
 
   @override
   Widget build(BuildContext context) {
-    return file == null ? displayUserHomeScreen() : displayUserUploadScreen();
+    Size screenSize = MediaQuery.of(context).size;
+    return file == null ? displayUserHomeScreen() : displayUserUploadScreen(screenSize);
   }
 
   displayUserHomeScreen() {
@@ -247,7 +247,7 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
     });
   }
 
-  displayUserUploadScreen() {
+  displayUserUploadScreen(Size screenSize) {
     return WillPopScope(
       onWillPop: (){Navigator.pop(context);},
       child: Scaffold(
@@ -285,7 +285,7 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
         ),
         body: ListView(
           children: [
-            uploading ? circularProgress() : Text(""),
+
             Container(
               height: 230.0,
               width: MediaQuery.of(context).size.width * 0.8,
@@ -309,16 +309,16 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
                     return takeImage(context,imageSelector);
                   },
                   child: CircleAvatar(
-                    radius: width * 0.1,
+                    radius: screenSize.width * 0.1,
                     backgroundColor: Colors.white,
                     backgroundImage: file1 == null?null:FileImage(file1),
                     child: file1 == null ? Icon(Icons.add_a_photo_outlined,
-                      size: width * 0.1,
+                      size: screenSize.width * 0.1,
                       color: Color(0xff122636),
                     ) : null,
                   ),
                 ),
-                SizedBox(width: width*0.05,),
+                SizedBox(width: screenSize.width*0.05,),
 
                 InkWell(
                   onTap:(){
@@ -327,16 +327,16 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
                     return takeImage(context,imageSelector);
                   },
                   child: CircleAvatar(
-                    radius: width * 0.1,
+                    radius: screenSize.width * 0.1,
                     backgroundColor: Colors.white,
                     backgroundImage: file2 == null?null:FileImage(file2),
                     child: file2 == null ? Icon(Icons.add_a_photo_outlined,
-                      size: width * 0.1,
+                      size: screenSize.width * 0.1,
                       color: Color(0xff122636),
                     ) : null,
                   ),
                 ),
-                SizedBox(width: width*0.05,),
+                SizedBox(width: screenSize.width*0.05,),
 
                 InkWell(
                   onTap:(){
@@ -344,16 +344,16 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
                     return takeImage(context,imageSelector);
                   },
                   child: CircleAvatar(
-                    radius: width * 0.1,
+                    radius: screenSize.width * 0.1,
                     backgroundColor: Colors.white,
                     backgroundImage: file3 == null?null:FileImage(file3),
                     child: file3 == null ? Icon(Icons.add_a_photo_outlined,
-                      size: width * 0.1,
+                      size: screenSize.width * 0.1,
                       color: Color(0xff122636),
                     ) : null,
                   ),
                 ),
-                SizedBox(width: width*0.05,),
+                SizedBox(width: screenSize.width*0.05,),
 
                 InkWell(
                   onTap:(){
@@ -361,11 +361,11 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
                     return takeImage(context,imageSelector);
                   },
                   child: CircleAvatar(
-                    radius: width * 0.1,
+                    radius: screenSize.width * 0.1,
                     backgroundColor: Colors.white,
                     backgroundImage: file4 == null?null:FileImage(file4),
                     child: file4 == null ? Icon(Icons.add_a_photo_outlined,
-                      size: width * 0.1,
+                      size: screenSize.width * 0.1,
                       color: Color(0xff122636),
                     ) : null,
                   ),
@@ -425,6 +425,8 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
                 ),
               ),
             ),
+            uploading ? circularProgress() : Text(""),
+
             Divider(
               color: Colors.pink,
             ),
@@ -843,12 +845,19 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
         StorageTaskSnapshot taskSnapshot1 = await uploadTask1.onComplete;
          downloadUrl[1] = await taskSnapshot1.ref.getDownloadURL();
       }
+    else
+      {downloadUrl[1]='https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/Items%2Fdownload.png?alt=media&token=d9c9dbf1-06b7-4e18-89fb-2f420a424a62';
+      }
     if(image2!=null)
     {    print("image2.............................................................");
     StorageUploadTask uploadTask2 = storageReference.child("product_$bookId 2.jpg").putFile(image2);
       StorageTaskSnapshot taskSnapshot2 = await uploadTask2.onComplete;
        downloadUrl[2] = await taskSnapshot2.ref.getDownloadURL();
     }
+    else
+      {
+        downloadUrl[2]='https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/Items%2Fdownload.png?alt=media&token=d9c9dbf1-06b7-4e18-89fb-2f420a424a62';
+      }
 
     if(image3!=null)
     {    print("image3.............................................................");
@@ -857,23 +866,29 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
       StorageTaskSnapshot taskSnapshot3 = await uploadTask3.onComplete;
        downloadUrl[3] = await taskSnapshot3.ref.getDownloadURL();
     }
+    else
+      {
+        downloadUrl[3] = 'https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/Items%2Fdownload.png?alt=media&token=d9c9dbf1-06b7-4e18-89fb-2f420a424a62';
+      }
 
-    if(image4!=null)
-    {    print("image4.............................................................");
+      if (image4 != null) {
+        print(
+            "image4.............................................................");
 
-    StorageUploadTask uploadTask4 = storageReference.child("product_$bookId 4.jpg").putFile(image4);
-      StorageTaskSnapshot taskSnapshot4 = await uploadTask4.onComplete;
-       downloadUrl[4] = await taskSnapshot4.ref.getDownloadURL();
+        StorageUploadTask uploadTask4 = storageReference.child("product_$bookId 4.jpg").putFile(image4);
+        StorageTaskSnapshot taskSnapshot4 = await uploadTask4.onComplete;
+        downloadUrl[4] = await taskSnapshot4.ref.getDownloadURL();
+      }
+      else
+        {
+          downloadUrl[4] = 'https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/Items%2Fdownload.png?alt=media&token=d9c9dbf1-06b7-4e18-89fb-2f420a424a62';
+        }
+
+
+        for (int i = 0; i < downloadUrl.length; i++)
+          print(downloadUrl[i]);
+
     }
-
-
-for(int i=0;i<downloadUrl.length;i++)
-  print(downloadUrl[i]);
-
-
-
-
-  }
 
   saveBookInfo() async {
     final itemsRef = Firestore.instance.collection("Books");
@@ -886,6 +901,7 @@ for(int i=0;i<downloadUrl.length;i++)
       "thumbnailUrl" : downloadUrl,
       "title" : _titletextEditingController.text.toUpperCase().trim(),
       "city" : city,
+      "phoneNumber":BookStore.sharedPreferences.getString(BookStore.phoneNumber),
       "category" : category,
       "bookId":bookId,
       "purpose":purpose,

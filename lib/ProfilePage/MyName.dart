@@ -18,11 +18,14 @@ class MyName extends StatefulWidget {
 }
 
 class _MyNameState extends State<MyName> {
+
   final TextEditingController _nametextEditingController = TextEditingController();
 
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+
     return SafeArea(
         child:Scaffold(
           appBar: MyAppBar(),
@@ -34,13 +37,13 @@ class _MyNameState extends State<MyName> {
             child: Column(
               children: [
                 SizedBox(
-                  height: height * 0.09,
+                  height: screenSize.height * 0.09,
                 ),
                 Row(
                     children: [
-                      SizedBox(width: width*0.05,),
+                      SizedBox(width: screenSize.width*0.05,),
                       Text("Your Name : ",style: TextStyle(fontSize: 20,color: Colors.black),),
-                      SizedBox(width: width*0.02,),
+                      SizedBox(width: screenSize.width*0.02,),
                       Flexible(
                         child: Text(widget.user.Name,style: TextStyle(
                           fontSize: 20,
@@ -51,7 +54,7 @@ class _MyNameState extends State<MyName> {
                     ],
                 ),
                 SizedBox(
-                  height: height * 0.04,
+                  height: screenSize.height * 0.04,
                 ),
                     CustomTextField(
                     data: Icons.drive_file_rename_outline,
@@ -61,7 +64,7 @@ class _MyNameState extends State<MyName> {
                     controller:_nametextEditingController,
                   ),
                   SizedBox(
-                    height: height * 0.09,
+                    height: screenSize.height * 0.09,
                   ),
 
                 ElevatedButton(

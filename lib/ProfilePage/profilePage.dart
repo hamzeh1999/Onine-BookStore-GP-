@@ -9,7 +9,10 @@ import 'package:gradproject/DialogBox/errorDialog.dart';
 import 'package:gradproject/DialogBox/loadingDialog.dart';
 import 'package:gradproject/Models/Book.dart';
 import 'package:gradproject/ProfilePage/DataUser.dart';
+import 'package:gradproject/ProfilePage/profile_menu.dart';
+import 'package:gradproject/ProfilePage/profile_pic.dart';
 import 'package:gradproject/Store/MyBook.dart';
+import 'package:gradproject/Widgets/CustomBottomNavBar.dart';
 import 'package:gradproject/Widgets/customAppBar.dart';
 import 'package:gradproject/Widgets/customTextField.dart';
 import 'package:gradproject/Widgets/loadingWidget.dart';
@@ -18,6 +21,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import '../Store/Home.dart';
+import 'MyEmail.dart';
+import 'MyName.dart';
+import 'MyPassword.dart';
+import 'MyPhoneNumber.dart';
 
 class profilePage extends StatefulWidget {
   final DataUser user;
@@ -45,337 +52,293 @@ class _profilePageState extends State<profilePage> {
 
   @override
   Widget build(BuildContext context) {
+
     // width = MediaQuery.of(context).size.width;
     //height = MediaQuery.of(context).size.height;
-    return WillPopScope(
-      onWillPop: (){Navigator.pop(context);},
+    // return WillPopScope(
+    //   onWillPop: (){Navigator.pop(context);},
+    //   child: Scaffold(
+    //     drawer: ClipRRect(
+    //       borderRadius: BorderRadius.only(
+    //           topRight: Radius.circular(44), bottomRight: Radius.circular(44)),
+    //       child: MyDrawer(),
+    //     ),
+    //     appBar: AppBar(
+    //       title: Text("الصفحه الشخصيه"),
+    //       centerTitle: true,
+    //       elevation: 6,
+    //       shape: RoundedRectangleBorder(
+    //         borderRadius: BorderRadius.vertical(
+    //           bottom: Radius.circular(50),
+    //         ),
+    //       ),
+    //       actions: [
+    //         IconButton(
+    //           icon: Icon(
+    //             Icons.book,
+    //             color: Colors.white,
+    //           ),
+    //           onPressed: () => Navigator.pushReplacement(
+    //             context,
+    //             MaterialPageRoute(builder: (context) => MyBook(dataUser:widget.user)),
+    //           ),
+    //         ),
+    //         // InkWell(
+    //         //     child: CircleAvatar(
+    //         //       radius: 27,
+    //         //       backgroundColor: Colors.white,
+    //         //       child: CircleAvatar(
+    //         //       radius: 25.7,
+    //         //       backgroundImage: NetworkImage(EcommerceApp.sharedPreferences.getString(EcommerceApp.userAvatarUrl)),
+    //         //   ),
+    //         //     ),
+    //         //   onTap: (){
+    //         //     Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>profilePage()));
+    //         //   },
+    //         // ),
+    //
+    //
+    //       ],
+    //     ),
+    //     body: SingleChildScrollView(
+    //       child: Column(children: <Widget>[
+    //
+    //
+    //
+    //
+    //         SizedBox(
+    //           height:height*0.02,
+    //         ),
+    //         Stack(
+    //           overflow: Overflow.visible,
+    //           alignment: Alignment.center,
+    //           children: <Widget>[
+    //             SizedBox(
+    //               height: height*0.29,
+    //             ),
+    //             Center(
+    //               child: CircleAvatar(
+    //                 radius: width * 0.292,
+    //                 backgroundColor: Colors.lightBlueAccent,
+    //                 child: CircleAvatar(
+    //                   radius: width * 0.9,
+    //                   backgroundImage: NetworkImage(widget.user.url),
+    //                 ),
+    //               ),
+    //             ),
+    //             Positioned(
+    //               bottom: -5.0,
+    //               child: IconButton(
+    //                 iconSize: 50.0,
+    //                 highlightColor: Colors.lightBlueAccent,
+    //                 color: Colors.lightBlueAccent,
+    //                 icon: Icon(Icons.linked_camera),
+    //                 onPressed: () => takeImage(context),
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //         SizedBox(
+    //           height: height * 0.09,
+    //         ),
+    //         Row(
+    //           children: [
+    //             SizedBox(width: width*0.05,),
+    //             Text("Your Name : ",style: TextStyle(fontSize: 20,color: Colors.black),),
+    //             SizedBox(width: width*0.02,),
+    //             Text(widget.user.Name,style: TextStyle(
+    //               fontSize: 20,
+    //               color: Colors.black,
+    //
+    //             ),),
+    //           ],
+    //         ),
+    //         CustomTextField(
+    //           data: Icons.drive_file_rename_outline,
+    //           hintText: "write your new name",
+    //           specifer: 1,
+    //           isObsecure: false,
+    //           controller:_nametextEditingController,
+    //         ),
+    //         SizedBox(
+    //           height: height * 0.09,
+    //         ),
+    //
+    //         Row(
+    //           children: [
+    //             SizedBox(width: width*0.05,),
+    //             Text(
+    //               "Your phoneNumber : ",
+    //               style: TextStyle(fontSize: 20, color: Colors.black),
+    //             ),
+    //             SizedBox(
+    //               width: width * 0.02,
+    //             ),
+    //             Text(
+    //               widget.user.phoneNumber.toString(),
+    //               style: TextStyle(
+    //                 fontSize: 20,
+    //                 color: Colors.black,
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //         CustomTextField(
+    //           data: Icons.phone,
+    //           hintText: "write new phone",
+    //           specifer: 0,
+    //           isObsecure: false,
+    //           controller: _phoneNumberTextEditingController,
+    //         ),
+    //
+    //         SizedBox(
+    //           height: height * 0.09,
+    //         ),
+    //         Row(
+    //           children: [
+    //             SizedBox(width: width*0.05,),
+    //             Text("Your Email : ",maxLines:2,style: TextStyle(fontSize: 20,color: Colors.black),),
+    //             SizedBox(width: width*0.02,),
+    //             Text(widget.user.Email,style: TextStyle(
+    //               fontSize: 20,
+    //               color: Colors.black,
+    //
+    //             ),),
+    //           ],
+    //         ),
+    //         CustomTextField(
+    //           data: Icons.email_outlined,
+    //           hintText: "write new Email",
+    //           specifer: 1,
+    //           isObsecure: false,
+    //           controller:_emailtextEditingController,
+    //         ),
+    //         SizedBox(
+    //           height: height * 0.09,
+    //         ),
+    //
+    //         Row(
+    //           children: [
+    //             SizedBox(width: width*0.05,),
+    //             Text("Your Password : ",style: TextStyle(fontSize: 20,color: Colors.black),),
+    //             SizedBox(width: width*0.02,),
+    //             Flexible(
+    //               child: Text(widget.user.password,maxLines:3 ,style: TextStyle(
+    //                 fontSize: 20,
+    //                 color: Colors.black,
+    //
+    //               ),),
+    //             ),
+    //           ],
+    //         ),
+    //         CustomTextField(
+    //           data: Icons.lock_outline,
+    //           hintText: "write new password",
+    //           specifer: 1,
+    //           isObsecure: false,
+    //           controller:_passwordTextEditingController,
+    //         ),
+    //
+    //
+    //
+    //
+    //
+    //
+    //         SizedBox(height: height*0.02,),
+    //         ElevatedButton(
+    //           onPressed: () {
+    //            updateDataToFirebase();
+    //           },
+    //           style: OutlinedButton.styleFrom(
+    //             elevation: 9,
+    //             backgroundColor: Colors.lightBlueAccent,
+    //             padding: EdgeInsets.symmetric(
+    //               horizontal: 15,
+    //               vertical: 6,
+    //             ),
+    //             shape: RoundedRectangleBorder(
+    //               borderRadius: BorderRadius.circular(25),
+    //             ),
+    //           ),
+    //           child: Text(
+    //             'Change',
+    //             style: TextStyle(
+    //               color: Colors.white,
+    //               fontSize: 20,
+    //             ),
+    //           ),
+    //         ),
+    //
+    //
+    //
+    //
+    //       ]
+    //       ),
+    //     ),
+    //   ),
+    // );
+    return SafeArea(
       child: Scaffold(
+        bottomNavigationBar: CustomBottomNavBar(selectedMenu: MenuState.profile),
+
+        backgroundColor: Colors.white,
+        appBar: MyAppBar(),
         drawer: ClipRRect(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(44), bottomRight: Radius.circular(44)),
-          child: MyDrawer(),
-        ),
-        appBar: AppBar(
-          title: Text("الصفحه الشخصيه"),
-          centerTitle: true,
-          elevation: 6,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(50),
-            ),
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.book,
-                color: Colors.white,
-              ),
-              onPressed: () => Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => MyBook(dataUser:widget.user)),
-              ),
-            ),
-            // InkWell(
-            //     child: CircleAvatar(
-            //       radius: 27,
-            //       backgroundColor: Colors.white,
-            //       child: CircleAvatar(
-            //       radius: 25.7,
-            //       backgroundImage: NetworkImage(EcommerceApp.sharedPreferences.getString(EcommerceApp.userAvatarUrl)),
-            //   ),
-            //     ),
-            //   onTap: (){
-            //     Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>profilePage()));
-            //   },
-            // ),
+          child: MyDrawer(),),
 
-
-          ],
-        ),
         body: SingleChildScrollView(
-          child: Column(children: <Widget>[
-
-
-
-
-            SizedBox(
-              height:height*0.02,
-            ),
-            Stack(
-              overflow: Overflow.visible,
-              alignment: Alignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: height*0.29,
-                ),
-                Center(
-                  child: CircleAvatar(
-                    radius: width * 0.292,
-                    backgroundColor: Colors.lightBlueAccent,
-                    child: CircleAvatar(
-                      radius: width * 0.9,
-                      backgroundImage: NetworkImage(widget.user.url),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: -5.0,
-                  child: IconButton(
-                    iconSize: 50.0,
-                    highlightColor: Colors.lightBlueAccent,
-                    color: Colors.lightBlueAccent,
-                    icon: Icon(Icons.linked_camera),
-                    onPressed: () => takeImage(context),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: height * 0.09,
-            ),
-            Row(
-              children: [
-                SizedBox(width: width*0.05,),
-                Text("Your Name : ",style: TextStyle(fontSize: 20,color: Colors.black),),
-                SizedBox(width: width*0.02,),
-                Text(widget.user.Name,style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.black,
-
-                ),),
-              ],
-            ),
-            CustomTextField(
-              data: Icons.drive_file_rename_outline,
-              hintText: "write your new name",
-              specifer: 1,
-              isObsecure: false,
-              controller:_nametextEditingController,
-            ),
-            SizedBox(
-              height: height * 0.09,
-            ),
-
-            Row(
-              children: [
-                SizedBox(width: width*0.05,),
-                Text(
-                  "Your phoneNumber : ",
-                  style: TextStyle(fontSize: 20, color: Colors.black),
-                ),
-                SizedBox(
-                  width: width * 0.02,
-                ),
-                Text(
-                  widget.user.phoneNumber,
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-            CustomTextField(
-              data: Icons.phone,
-              hintText: "write new phone",
-              specifer: 0,
-              isObsecure: false,
-              controller: _phoneNumberTextEditingController,
-            ),
-
-            SizedBox(
-              height: height * 0.09,
-            ),
-            Row(
-              children: [
-                SizedBox(width: width*0.05,),
-                Text("Your Email : ",style: TextStyle(fontSize: 20,color: Colors.black),),
-                SizedBox(width: width*0.02,),
-                Text(widget.user.Email,style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.black,
-
-                ),),
-              ],
-            ),
-            CustomTextField(
-              data: Icons.email_outlined,
-              hintText: "write new Email",
-              specifer: 1,
-              isObsecure: false,
-              controller:_emailtextEditingController,
-            ),
-            SizedBox(
-              height: height * 0.09,
-            ),
-
-            Row(
-              children: [
-                SizedBox(width: width*0.05,),
-                Text("Your Password : ",style: TextStyle(fontSize: 20,color: Colors.black),),
-                SizedBox(width: width*0.02,),
-                Text(widget.user.password,style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.black,
-
-                ),),
-              ],
-            ),
-            CustomTextField(
-              data: Icons.lock_outline,
-              hintText: "write new password",
-              specifer: 1,
-              isObsecure: false,
-              controller:_passwordTextEditingController,
-            ),
-
-
-
-
-
-
-            SizedBox(height: height*0.02,),
-            ElevatedButton(
-              onPressed: () {
-               updateDataToFirebase();
-              },
-              style: OutlinedButton.styleFrom(
-                elevation: 9,
-                backgroundColor: Colors.lightBlueAccent,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 6,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
+          padding: EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            children: [
+              ProfilePic(user: widget.user,),
+              SizedBox(height: 20),
+              ProfileMenu(
+                text: "My name:",
+                icon2: Icons.arrow_forward_ios,
+                icon: Icons.drive_file_rename_outline,
+                press: () => {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyName(widget.user)))
+                },
               ),
-              child: Text(
-                'Change',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
+              ProfileMenu(
+                text: "My phoneNumber",
+                icon:Icons.phone,
+                icon2: Icons.arrow_forward_ios,
+
+                press: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyPhoneNumber(widget.user)));
+                },
               ),
-            ),
+              ProfileMenu(
+                text: "My Email:",
+                icon2: Icons.arrow_forward_ios,
+                icon: Icons.email_outlined,
+                press: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyEmail(widget.user)));
 
+                },
+              ),
+              ProfileMenu(
+                text: "My password:",
+                icon2: Icons.arrow_forward_ios,
+                icon: Icons.lock_outline,
+                press: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyPassword(widget.user)));
 
-
-
-          ]
+                },
+              ),
+            ],
           ),
         ),
       ),
     );
+
+
   }
 
-  takeImage(mContext) {
-    setState(() {});
-    return showDialog(
-      context: mContext,
-      builder: (con) {
-        return SimpleDialog(
-          shape: RoundedRectangleBorder(
-            side: BorderSide(color: Colors.lightGreen, width: 4),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          title: Text(
-            "Book Image",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          children: [
-            SimpleDialogOption(
-              child: Text("Capture With Camera",
-                  style: TextStyle(
-                    color: Colors.black,
-                  )),
-              onPressed: caputrePhotoWithCamera,
-            ),
-            SimpleDialogOption(
-              child: Text("Select From Gallery",
-                  style: TextStyle(
-                    color: Colors.black,
-                  )),
-              onPressed: pickPhotoFromGallery,
-            ),
-            SimpleDialogOption(
-              child: Text("Cancel",
-                  style: TextStyle(
-                    color: Colors.black,
-                  )),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
-  caputrePhotoWithCamera() async {
-    Navigator.pop(context);
-    File imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
-    setState(() {
-      file = imageFile;
-    });
-    updatePhotoToFirebase();
-  }
-
-  pickPhotoFromGallery() async {
-    Navigator.pop(context);
-    File imageFile = await ImagePicker.pickImage(
-      source: ImageSource.gallery,
-    );
-    setState(() {
-      file = imageFile;
-    });
-    updatePhotoToFirebase();
-  }
-
-  updatePhotoToFirebase() async {
-    if (file != null) {
-      showDialog(
-          context: context,
-          builder: (c) {
-            return LoadingAlertDialog(
-              message: "Upload Photo ....",
-            );
-          });
-
-      String imageFileName = DateTime.now().microsecondsSinceEpoch.toString();
-
-      StorageReference storageReference =
-          FirebaseStorage.instance.ref().child(imageFileName);
-
-      StorageUploadTask storageUploadTask = storageReference.putFile(file);
-
-      StorageTaskSnapshot taskSnapshot = await storageUploadTask.onComplete;
-
-      await taskSnapshot.ref.getDownloadURL().then((urlImage) {
-        userImageUrl = urlImage;
-      });
-
-//print("EcommerceApp.forProfile.uidEcommerceApp.forProfile.uid ..................");
-      Firestore.instance
-          .collection("users")
-          .document(
-              BookStore.sharedPreferences.getString(BookStore.userUID))
-          .updateData({'url': userImageUrl})
-          .then((value) => print("User Updated"))
-          .catchError((error) => print("Failed to update user: $error"));
-      //print("done");
-      Navigator.pop(context);
-    } else
-      showDialog(
-        context: context,
-        builder: (c) {
-          return ErrorAlertDialog(
-            message: "Please Select An Image File .",
-          );
-        },
-      );
-  }
 
 
   updateDataToFirebase() async {
@@ -546,3 +509,4 @@ class _profilePageState extends State<profilePage> {
 
 
 }
+

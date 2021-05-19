@@ -46,9 +46,9 @@ class _ProfilePicState extends State<ProfilePic> {
                   borderRadius: BorderRadius.circular(50),
                   side: BorderSide(color: Colors.white),
                 ),
-                color: Color(0xFFF5F6F9),
+                color: Color(0xFFf5F6F9),
                 onPressed: () {
-
+takeImage(context);
                 },
                 child: Center(child: Icon(Icons.camera_alt_outlined)),
               ),
@@ -66,7 +66,7 @@ class _ProfilePicState extends State<ProfilePic> {
       builder: (con) {
         return SimpleDialog(
           shape: RoundedRectangleBorder(
-            side: BorderSide(color: Colors.lightGreen, width: 4),
+            side: BorderSide(color:Color(0xff122636), width: 4),
             borderRadius: BorderRadius.circular(10),
           ),
           title: Text(

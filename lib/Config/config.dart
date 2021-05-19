@@ -14,6 +14,8 @@ class BookStore
 
 
 
+   static bool see=false;
+
 
    static int transporterNovels=0;
    static  int numberNovels=0;

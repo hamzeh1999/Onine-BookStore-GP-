@@ -9,7 +9,7 @@ import 'package:gradproject/Store/Search.dart';
 import 'package:gradproject/Widgets/customAppBar.dart';
 import 'package:gradproject/upload/uploadBook.dart';
 
-enum MenuState { Home, Upload, Profile, Logout }
+enum MenuState { Home, Upload,search,profile,logout }
 
 class CustomBottomNavBar extends StatelessWidget {
  // DataUser user;
@@ -41,13 +41,8 @@ class CustomBottomNavBar extends StatelessWidget {
       child: SafeArea(
           top: false,
           child: Row(
-
-
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-
-
-
 
               IconButton(
                   icon: Icon(Icons.house_outlined,
@@ -69,7 +64,7 @@ class CustomBottomNavBar extends StatelessWidget {
                 },
               ),
               IconButton(
-                icon:Icon(Icons.search_outlined,color: MenuState.Profile == selectedMenu
+                icon:Icon(Icons.search_outlined,color: MenuState.search == selectedMenu
                     ? Colors.black
                     : inActiveIconColor,),
                 onPressed: () {
@@ -77,41 +72,72 @@ class CustomBottomNavBar extends StatelessWidget {
                   Navigator.push(context, route);
                 },
               ),
+
+
+              StreamBuilder<QuerySnapshot>(
+                stream:Firestore.instance
+                    .collection("users")
+                    .where("uid",isEqualTo:BookStore.sharedPreferences.getString(BookStore.userUID))
+                    .snapshots(),
+                builder: (context,dataSnapShot){
+                  if(!dataSnapShot.hasData)
+                  {
+                    return Icon(Icons.airplanemode_active);
+                  }
+                  DataUser user = DataUser.fromJson(dataSnapShot.data.documents[0].data);
+                  return IconButton(
+                    icon:Icon(Icons.person_outline,color: MenuState.profile == selectedMenu
+                        ? Colors.black
+                        : inActiveIconColor,),
+                    onPressed: () {
+                      Route route = MaterialPageRoute(builder: (c)=> profilePage(user:user) );
+                      Navigator.push(context, route);
+                    },
+                  );
+
+
+                  //profilePage(user, context);
+
+                },
+              ),
+
+
               IconButton(
-                icon: Icon(Icons.logout,color: MenuState.Logout == selectedMenu
+                icon:Icon(Icons.logout,color: MenuState.logout== selectedMenu
                     ? Colors.black
                     : inActiveIconColor,),
                 onPressed: () {
                   BookStore.auth.signOut().then((c) {
-                    Route route = MaterialPageRoute(builder: (c)=> AuthenticScreen() );
-                    Navigator.pushReplacement(context, route);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => AuthenticScreen()),
+                          (Route<dynamic> route) => false,
+                    );
                   });
                 },
               ),
-
-              // StreamBuilder<QuerySnapshot>(
-              //   stream:Firestore.instance
-              //       .collection("users")
-              //       .where("uid",isEqualTo: EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-              //       .snapshots(),
-              //   builder: (context,dataSnapShot){
-              //     if(!dataSnapShot.hasData)
-              //     {
-              //       return CircularProgressIndicator();
-              //     }
-              //     DataUser user = DataUser.fromJson(dataSnapShot.data.documents[0].data);
-              //     return smallPicture(user, context);
-              //
-              //   },
-              // ),
-
-
-
 
             ],
           )),
     );
   }
-
-
+//
+// Widget profilePage(DataUser user,BuildContext context, {DataUser user})
+// {
+//   return InkWell(
+//     child:Material(
+//       child: Card(
+//         child: Icon(Icons.person_outline,
+//           color: MenuState.profile == selectedMenu ? Colors.black :Color(0xFFB6B6B6),
+//         ),
+//       ),
+//     ),
+//     onTap: (){
+//       Route route = MaterialPageRoute(
+//           builder: (c) => profilePage(user, context));
+//       Navigator.push(context, route);
+//     },
+//   );
+//
+// }
 }

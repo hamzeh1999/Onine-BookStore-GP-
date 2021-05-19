@@ -19,6 +19,7 @@ class SocalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Size sizeScreen= MediaQuery.of(context).size;
     return GestureDetector(
+
       onTap: press,
       child: Container(
          margin: EdgeInsets.symmetric(horizontal:(10/ 375.0)*sizeScreen.width ),

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Book {
   //String searchKey;
   String purpose;
+  String phoneNumber;
   String userUID;
   String bookId;
   String title;
@@ -19,6 +20,7 @@ class Book {
 
   Book(
       {
+        this.phoneNumber,
         this.bookId,
         this.userUID,
         this.newTitle,
@@ -48,7 +50,7 @@ class Book {
     bookId=json['bookId'];
     userUID=json['uid'];
     publishedDate = json['publishedDate'];
-
+    phoneNumber = json['phoneNumber'];
     thumbnailUrl = json['thumbnailUrl'];
     description = json['description'];
     status = json['status'];
@@ -64,7 +66,9 @@ class Book {
     data['bookId']=this.bookId;
     data['purpose']=this.purpose;
     data['uid']=this.userUID;
-   // data['shortInfo'] = this.shortInfo;
+    data['phoneNumber']=this.phoneNumber;
+
+    // data['shortInfo'] = this.shortInfo;
     data['price'] = this.price;
     if (this.publishedDate != null) {
       data['publishedDate'] = this.publishedDate;

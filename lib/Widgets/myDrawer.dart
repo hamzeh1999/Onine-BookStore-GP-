@@ -15,93 +15,96 @@ class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        children: [
-          Container(
-            padding: EdgeInsets.only(top: 25.0, bottom: 10.0),
-            decoration: new BoxDecoration(
-             color: Colors.cyan,
-            ),
-            child: StreamBuilder<QuerySnapshot>(
-              stream:Firestore.instance
-                  .collection("users")
-                  .where("uid",isEqualTo: BookStore.sharedPreferences.getString(BookStore.userUID))
-                  .snapshots(),
-              builder: (context,dataSnapShot){
-                if(!dataSnapShot.hasData)
-                {
-                  return CircularProgressIndicator();
-                }
-                 user = DataUser.fromJson(dataSnapShot.data.documents[0].data);
-                return smallPicture(user, context);
+      child: Container(
+        color: Colors.cyan,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
 
-              },
-            ),
+              StreamBuilder<QuerySnapshot>(
+                stream:Firestore.instance
+                    .collection("users")
+                    .where("uid",isEqualTo: BookStore.sharedPreferences.getString(BookStore.userUID))
+                    .snapshots(),
+                builder: (context,dataSnapShot){
+                  if(!dataSnapShot.hasData)
+                  {
+                    return CircularProgressIndicator();
+                  }
+                   user = DataUser.fromJson(dataSnapShot.data.documents[0].data);
+                  return smallPicture(user, context);
+
+                },
+              ),
+              SizedBox (
+                height: 2.0,
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 1.0),
+                decoration: new BoxDecoration(
+                  color: Colors.cyan
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.person , color: Colors.white ,),
+                      title: Text("My profile ", style: TextStyle(color: Colors.white),),
+                      onTap: (){
+                        Route route = MaterialPageRoute(builder: (c)=> profilePage(user: user,) );
+                        Navigator.push(context, route);
+                      },
+                    ),
+                    Divider(height: 5.0, color: Colors.white, thickness: 2.0,) ,
+                    ListTile(
+                      leading: Icon(Icons.home , color: Colors.white ,),
+                      title: Text("Home ", style: TextStyle(color: Colors.white),),
+                      onTap: (){
+                        Route route = MaterialPageRoute(builder: (c)=> Home() );
+                        Navigator.push(context, route);
+                      },
+                    ),
+                    Divider(height: 5.0, color: Colors.white, thickness: 2.0,) ,
+                    ListTile(
+                      leading: Icon(Icons.upload_outlined , color: Colors.white ,),
+                      title: Text("UPLOAD ", style: TextStyle(color: Colors.white),),
+                      onTap: (){
+                        Route route = MaterialPageRoute(builder: (c)=> UploadPage() );
+                        Navigator.push(context, route);
+                      },
+                    ),
+                    Divider(height: 5.0, color: Colors.white, thickness: 2.0,) ,
+                    ListTile(
+                      leading: Icon(Icons.search , color: Colors.white ,),
+                      title: Text("Search ", style: TextStyle(color: Colors.white),),
+                      onTap: (){
+                        Route route = MaterialPageRoute(builder: (c)=> SearchProduct() );
+                        Navigator.push(context, route);
+                      },
+                    ),
+                    Divider(height: 5.0, color: Colors.white, thickness: 2.0,) ,
+                    ListTile(
+                      leading: Icon(Icons.logout , color: Colors.white ,),
+                      title: Text("Log Out ", style: TextStyle(color: Colors.white),),
+                      onTap: (){
+                        BookStore.auth.signOut().then((c) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => AuthenticScreen()),
+                                (Route<dynamic> route) => false,
+                          );
+                        });
+                      },
+                    ),
+                    Divider(height: 5.0, color: Colors.white, thickness: 2.0,) ,
+
+
+                  ],
+                ),
+
+              ),
+            ],
           ),
-          SizedBox (
-            height: 2.0,
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 1.0),
-            decoration: new BoxDecoration(
-              color: Colors.cyan
-            ),
-            child: Column(
-              children: [
-                ListTile(
-                  leading: Icon(Icons.person , color: Colors.white ,),
-                  title: Text("My profile ", style: TextStyle(color: Colors.white),),
-                  onTap: (){
-                    Route route = MaterialPageRoute(builder: (c)=> profilePage(user: user,) );
-                    Navigator.push(context, route);
-                  },
-                ),
-                Divider(height: 5.0, color: Colors.white, thickness: 2.0,) ,
-                ListTile(
-                  leading: Icon(Icons.home , color: Colors.white ,),
-                  title: Text("Home ", style: TextStyle(color: Colors.white),),
-                  onTap: (){
-                    Route route = MaterialPageRoute(builder: (c)=> Home() );
-                    Navigator.push(context, route);
-                  },
-                ),
-                Divider(height: 5.0, color: Colors.white, thickness: 2.0,) ,
-                ListTile(
-                  leading: Icon(Icons.upload_outlined , color: Colors.white ,),
-                  title: Text("UPLOAD ", style: TextStyle(color: Colors.white),),
-                  onTap: (){
-                    Route route = MaterialPageRoute(builder: (c)=> UploadPage() );
-                    Navigator.push(context, route);
-                  },
-                ),
-                Divider(height: 5.0, color: Colors.white, thickness: 2.0,) ,
-                ListTile(
-                  leading: Icon(Icons.search , color: Colors.white ,),
-                  title: Text("Search ", style: TextStyle(color: Colors.white),),
-                  onTap: (){
-                    Route route = MaterialPageRoute(builder: (c)=> SearchProduct() );
-                    Navigator.push(context, route);
-                  },
-                ),
-                Divider(height: 5.0, color: Colors.white, thickness: 2.0,) ,
-                ListTile(
-                  leading: Icon(Icons.exit_to_app , color: Colors.white ,),
-                  title: Text("Log Out ", style: TextStyle(color: Colors.white),),
-                  onTap: (){
-                    BookStore.auth.signOut().then((c) {
-                      Route route = MaterialPageRoute(builder: (c)=> AuthenticScreen() );
-                      Navigator.pushReplacement(context, route);
-                    });
-                  },
-                ),
-                Divider(height: 5.0, color: Colors.white, thickness: 2.0,) ,
-
-
-              ],
-            ),
-
-          )
-        ],
+        ),
       ),
     );
   }
@@ -113,31 +116,28 @@ class MyDrawer extends StatelessWidget {
 
   Widget smallPicture(DataUser dataUser,BuildContext context)
   {
+    Size screenSize = MediaQuery.of(context).size;
+
     return Column(
       children: [
-        Material(
-          color: Colors.blue,
-          borderRadius: BorderRadius.all(Radius.circular(90.0)),
-          elevation: 8.0,
-          child: Container(
-            height: height*0.28,
-            width: width*0.5,
-            child: InkWell(
+        Container(
+          height: screenSize.height*0.28,
+          width: screenSize.width*0.5,
+          child: InkWell(
+            child: CircleAvatar(
+              //radius: 90,
+              backgroundColor: Colors.white,
               child: CircleAvatar(
-                //radius: 90,
-                backgroundColor: Colors.white,
-                child: CircleAvatar(
-                  radius: 87.7, // NetworkImage(EcommerceApp.sharedPreferences.getString(EcommerceApp.userAvatarUrl))==null? Icon(Icons.person_outline,color: Colors.red,):null,
-                  backgroundImage: NetworkImage(dataUser.url),
+                radius: 87.7, // NetworkImage(EcommerceApp.sharedPreferences.getString(EcommerceApp.userAvatarUrl))==null? Icon(Icons.person_outline,color: Colors.red,):null,
+                backgroundImage: NetworkImage(dataUser.url),
 
-                ),
               ),
-              onTap: (){
-
-                Navigator.push(context,MaterialPageRoute(builder: (context)=>profilePage(user: dataUser)));
-
-              },
             ),
+            onTap: (){
+
+              Navigator.push(context,MaterialPageRoute(builder: (context)=>profilePage(user: dataUser)));
+
+            },
           ),
         ),
 
@@ -145,7 +145,7 @@ class MyDrawer extends StatelessWidget {
           height: 10.0,
         ),
         Text(
-          dataUser.Name,
+          dataUser.Name,textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.white,
             fontSize: 35.0,

@@ -26,6 +26,8 @@ class _MyPhoneNumberState extends State<MyPhoneNumber> {
   bool makeStream=false;
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+
     return SafeArea(
       child:Scaffold(
         appBar: MyAppBar(),
@@ -56,7 +58,7 @@ class _MyPhoneNumberState extends State<MyPhoneNumber> {
 
                   }
                   return SizedBox(
-                    height: height * 0.0,
+                    height: screenSize.height * 0.0,
                   );
                 },),
               if(makeStream==true)
@@ -83,7 +85,7 @@ class _MyPhoneNumberState extends State<MyPhoneNumber> {
                         dataSnapShot.data.documents[0].data);
                     bookId = book.bookId;
                     return SizedBox(
-                      height: height * 0.09,
+                      height: screenSize.height * 0.09,
                     );
                   },
                 ),
@@ -93,9 +95,9 @@ class _MyPhoneNumberState extends State<MyPhoneNumber> {
               // ),
               Row(
                 children: [
-                  SizedBox(width: width*0.05,),
+                  SizedBox(width: screenSize.width*0.05,),
                   Text("Your phoneNumber : ",style: TextStyle(fontSize: 20,color: Colors.black),),
-                  SizedBox(width: width*0.02,),
+                  SizedBox(width: screenSize.width*0.02,),
                   Flexible(
                     child: Text(widget.user.phoneNumber,style: TextStyle(
                       fontSize: 20,
@@ -108,7 +110,7 @@ class _MyPhoneNumberState extends State<MyPhoneNumber> {
               ),
 
               SizedBox(
-                height: height * 0.04,
+                height: screenSize.height * 0.04,
               ),
               CustomTextField(
                 data: Icons.local_phone_outlined,
@@ -118,7 +120,7 @@ class _MyPhoneNumberState extends State<MyPhoneNumber> {
                 controller:_phoneNumberTextEditingController,
               ),
               SizedBox(
-                height: height * 0.09,
+                height: screenSize.height * 0.09,
               ),
               ElevatedButton(
                 onPressed: () {

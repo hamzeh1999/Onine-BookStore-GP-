@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gradproject/Store/Home.dart';
-import 'package:gradproject/Store/product_page.dart';
+import 'file:///D:/GradProject/lib/Book_Details/product_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -27,7 +27,9 @@ class NovelsPage extends StatefulWidget {
 class _NovelsPageState extends State<NovelsPage> {
   @override
   Widget build(BuildContext context) {
-  //  width = MediaQuery.of(context).size.width;
+    Size screenSize = MediaQuery.of(context).size;
+
+    //  width = MediaQuery.of(context).size.width;
   //  height = MediaQuery.of(context).size.height;
 
     return SafeArea(
@@ -44,7 +46,7 @@ class _NovelsPageState extends State<NovelsPage> {
             child: Column(
               children: [
 
-                SizedBox(height:height*0.001),
+                SizedBox(height:screenSize.height*0.001),
                 Container(
                   width: double.infinity,
                   margin: EdgeInsets.all(15.0),
@@ -77,8 +79,8 @@ class _NovelsPageState extends State<NovelsPage> {
 
                 ),
                 Container(
-                  width: width*4.0,
-                  height:height*0.66,
+                  width:screenSize.width*4.0,
+                  height:screenSize.height*0.66,
                   child: CustomScrollView(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,

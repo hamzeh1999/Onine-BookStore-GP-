@@ -267,6 +267,10 @@ class _RegisterState extends State<Register> {
         });
       }
   }
+
+
+
+
   Future saveUserInfoToFireStore(FirebaseUser fuser) async
   {
    Firestore.instance.collection("users").document(fuser.uid).setData({

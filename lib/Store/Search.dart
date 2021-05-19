@@ -170,7 +170,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gradproject/ProfilePage/DataUser.dart';
 import 'package:gradproject/ProfilePage/profilePage.dart';
 import 'package:gradproject/Store/Home.dart';
-import 'package:gradproject/Store/product_page.dart';
+import 'file:///D:/GradProject/lib/Book_Details/product_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -209,9 +209,7 @@ class _SearchProductState extends State<SearchProduct> {
 
 
 
-
-
-     if(category.isNotEmpty && category!="choice category :" && city.isNotEmpty && city!="choice city :" )
+   if(category.isNotEmpty && category!="choice category :" && city.isNotEmpty && city!="choice city :" )
      {
        print("........................................................... just city and category");
 
@@ -237,21 +235,47 @@ print("........................................................... just city");
      }
      else if(category.isNotEmpty && category!="choice category :")
        {
-         print("........................................................... just category");
+         print("........................................................... just name category");
 
          documnetList=Firestore.instance
              .collection('Books')
              .where('caseSearch',arrayContains: capitalizedValue).where("category",isEqualTo:category)
              .snapshots();
      }
-
-     else if(category.isEmpty || category=="choice category :" || city.isEmpty || city!="choice city :") {
+     else if(category.isEmpty || category=="choice category :" || city.isEmpty || city!="choice city :")
+     {
        print("........................................................... nothing");
        documnetList = Firestore.instance
            .collection('Books')
            .where('caseSearch', arrayContains: capitalizedValue)
            .snapshots();
      }
+
+   //  else if(city.isNotEmpty && city!="choice city :")
+   //  {
+   //  print("........................................................... just city");
+   //
+   //  documnetList=Firestore.instance
+   //      .collection('Books')
+   //      .where("city",isEqualTo:city)
+   //      .snapshots();
+   //
+   //
+   //
+   //  }
+   // else if(category.isEmpty && category=="choice category :")
+   // {
+   //   print("........................................................... just category");
+   //
+   //   documnetList=Firestore.instance
+   //       .collection('Books')
+   //       .where("category",isEqualTo:category)
+   //       .snapshots();
+   //
+   //
+   //
+   // }
+   //
      setState(() {
 
      });
@@ -260,6 +284,7 @@ print("........................................................... just city");
   Widget build(BuildContext context) {
     //  width = MediaQuery.of(context).size.width;
     // height = MediaQuery.of(context).size.height;
+    Size screenSize = MediaQuery.of(context).size;
 
     return SafeArea(
       child: WillPopScope(
@@ -267,12 +292,13 @@ print("........................................................... just city");
         child: Scaffold(
          // backgroundColor: Colors.white,
           appBar:AppBar(
+
             title: Text("Search Page"),
               centerTitle: true,
               actions: [
                 Container(
-                  width:width*0.15,
-                  height: height*0.01,
+                  width:screenSize.width*0.15,
+                  height: screenSize.height*0.01,
                   child: StreamBuilder<QuerySnapshot>(
                     stream:Firestore.instance
                         .collection("users")
@@ -292,7 +318,7 @@ print("........................................................... just city");
 
 
 
-                SizedBox(width: width*0.07,),
+                SizedBox(width: screenSize.width*0.07,),
 
                 ],
               backgroundColor: Colors.blue[400],
@@ -303,42 +329,45 @@ print("........................................................... just city");
         ),
     ),
           ),
-          // drawer: ClipRRect(
-          //   borderRadius: BorderRadius.only(
-          //       topRight: Radius.circular(44), bottomRight: Radius.circular(44)),
-          //   child: MyDrawer(),),
+          drawer: ClipRRect(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(44), bottomRight: Radius.circular(44)),
+            child: MyDrawer(),),
           body: SingleChildScrollView(
             child: Column(
               children: [
 
-                SizedBox(height: height*0.01,),
+                SizedBox(height:screenSize.height*0.01,),
                 Container(
                   decoration:BoxDecoration(
                     color: Colors.white30,
                     borderRadius: BorderRadius.all((Radius.circular(30.0)),
                     ),
                   ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border:InputBorder.none,
-                      prefixIcon: Icon(Icons.search_outlined,color: Colors.blue,),
-                      hintText:"Search here by title  :",
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blueAccent, width: 2.0,style: BorderStyle.solid),
-                      ),
-                    ),
-                    onChanged: (value){
-                      //capitalizedValue=value.toUpperCase();
-                      initSearch(value);
-                    },
+                  child:
+                      TextField(
+                        decoration: InputDecoration(
+                          border:InputBorder.none,
+                          prefixIcon: Icon(Icons.search_outlined,color: Colors.blue,),
+                          hintText:"Search here by title  :",
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.blueAccent, width: 2.0,style: BorderStyle.solid),
+                          ),
+                        ),
+                        onChanged: (value){
+                          //capitalizedValue=value.toUpperCase();
+                          initSearch(value);
+                        },
 
-                  ),
+                      ),
+
+
                 ),
-                SizedBox(height: height*0.01,),
+                SizedBox(height: screenSize.height*0.01,),
                 Container(
                   color: Colors.white,
-                  width: width * 0.92,
-                  height: height * 0.1,
+                  width: screenSize.width * 0.92,
+                  height: screenSize.height * 0.1,
                   child: ListTile(
                     leading: Icon(
                       Icons.location_on_outlined,
@@ -352,7 +381,6 @@ print("........................................................... just city");
                         hint: Text("City : ",
                           style: TextStyle(color: Colors.pink),),
                         items: [
-
                           DropdownMenuItem(
                             child: Row(
                               children: [
@@ -492,12 +520,11 @@ print("........................................................... just city");
                     ),
                   ),
                 ),
-                SizedBox(height: height*0.01,),
-
+                SizedBox(height: screenSize.height*0.01,),
                 Container(
                   color: Colors.white70,
-                  width: width * 0.92,
-                  height: height * 0.1,
+                  width: screenSize.width * 0.92,
+                  height: screenSize.height * 0.1,
                   child: ListTile(
                     leading: Icon(
                       Icons.category,
@@ -567,12 +594,13 @@ print("........................................................... just city");
 
 
 
-                SizedBox(height: height*0.01,),
+                SizedBox(height:screenSize.height*0.01,),
 
-                SizedBox(height:height*0.001),
+                SizedBox(height:screenSize.height*0.001),
+
                 Container(
-                  width: width*4.0,
-                  height:height*0.66,
+                  width: screenSize.width*4.0,
+                  height:screenSize.height*0.66,
                   child: CustomScrollView(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
@@ -606,7 +634,7 @@ print("........................................................... just city");
               ],
             ),
           ),
-          bottomNavigationBar: CustomBottomNavBar(selectedMenu: MenuState.Profile),
+          bottomNavigationBar: CustomBottomNavBar(selectedMenu: MenuState.search),
 
         ),
       ),

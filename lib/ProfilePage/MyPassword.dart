@@ -26,7 +26,9 @@ class _MyPasswordState extends State<MyPassword> {
 
   @override
     Widget build(BuildContext context) {
-      return SafeArea(
+    Size screenSize = MediaQuery.of(context).size;
+
+    return SafeArea(
         child:Scaffold(
           appBar: MyAppBar(),
           drawer: ClipRRect(
@@ -38,15 +40,15 @@ class _MyPasswordState extends State<MyPassword> {
               children: [
 
                 SizedBox(
-                  height: height * 0.09,
+                  height: screenSize.height * 0.09,
                 ),
 
 
                 Row(
                   children: [
-                    SizedBox(width: width*0.05,),
+                    SizedBox(width: screenSize.width*0.05,),
                     Text("Your Password : ",style: TextStyle(fontSize: 20,color: Colors.black),),
-                    SizedBox(width: width*0.02,),
+                    SizedBox(width: screenSize.width*0.02,),
                     Flexible(
                       child: Text(widget.user.password,style: TextStyle(
                         fontSize: 20,
@@ -57,7 +59,7 @@ class _MyPasswordState extends State<MyPassword> {
                   ],
                 ),
                 SizedBox(
-                  height: height * 0.04,
+                  height: screenSize.height * 0.04,
                 ),
                 CustomTextField(
                   data: Icons.lock_outline,
@@ -67,7 +69,7 @@ class _MyPasswordState extends State<MyPassword> {
                   controller:_passwordTextEditingController,
                 ),
                 SizedBox(
-                  height: height * 0.04,
+                  height: screenSize.height * 0.04,
                 ),
                 CustomTextField(
                   data: Icons.lock_outline,
@@ -77,7 +79,7 @@ class _MyPasswordState extends State<MyPassword> {
                   controller:_cpasswordtextEditingController,
                 ),
                 SizedBox(
-                  height: height * 0.09,
+                  height: screenSize.height * 0.09,
                 ),
                 ElevatedButton(
                   onPressed: () {

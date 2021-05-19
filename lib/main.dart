@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:gradproject/Models/Book.dart';
 import 'package:gradproject/Store/Home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +13,12 @@ import 'Store/SciencePage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp],
+  ); // To turn off landscape mode
+
+
+
   BookStore.auth = FirebaseAuth.instance;
   BookStore.sharedPreferences = await  SharedPreferences.getInstance();
   BookStore.firestore = Firestore.instance;
