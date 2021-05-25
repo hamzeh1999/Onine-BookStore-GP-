@@ -98,6 +98,15 @@ class _MyNameState extends State<MyName> {
     );
   }
 
+  setSearchParam(String caseNumber) {
+    List<String> caseSearchList = List();
+    String temp = "";
+    for (int i = 0; i < caseNumber.length; i++) {
+      temp = temp + caseNumber[i];
+      caseSearchList.add(temp);
+    }
+    return caseSearchList;
+  }
 
   updateDataToFirebase() async {
 
@@ -108,9 +117,26 @@ class _MyNameState extends State<MyName> {
             .document(
             BookStore.sharedPreferences.getString(BookStore.userUID))
             .updateData({
+          "caseSearch": setSearchParam(_nametextEditingController.text.toUpperCase()),
           'name': _nametextEditingController.text
+
         })
-            .then((value) => print("User Updated in fireStore"))
+            .then((value) {
+          _nametextEditingController.clear();
+
+          Fluttertoast.showToast(
+            msg: "it\'s Done",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            //timeInSecForIosWeb: 1,
+            backgroundColor: Colors.blueAccent,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+
+
+              print("User Updated in fireStore");
+            })
             .catchError((error) {
           print("Failed to update user in firestore: $error");
           showDialog(
@@ -121,16 +147,7 @@ class _MyNameState extends State<MyName> {
             },);
         });
 
-        Fluttertoast.showToast(
-          msg: "it\'s Done .......",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          //timeInSecForIosWeb: 1,
-          backgroundColor: Colors.blueAccent,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-        _nametextEditingController.clear();
+
       }
       else
         showDialog(

@@ -39,56 +39,7 @@ class _MyPhoneNumberState extends State<MyPhoneNumber> {
           child: Column(
             children: [
 
-              StreamBuilder<QuerySnapshot> (
-                stream:  Firestore.instance
-                    .collection("Books")
-                    .where("uid",isEqualTo: BookStore.sharedPreferences.getString(BookStore.userUID))
-                    .snapshots(),
-                builder: (context,dataSnapShot){
 
-
-                  print("stream first  before if statment .......................................");
-
-                if(dataSnapShot.hasData)
-                  {print("stream first if statment .......................................");
-                  print(".................before............................$makeStream");
-
-                  makeStream=true;
-                  print("................after.............................$makeStream");
-
-                  }
-                  return SizedBox(
-                    height: screenSize.height * 0.0,
-                  );
-                },),
-              if(makeStream==true)
-                StreamBuilder<QuerySnapshot>(
-                  stream: Firestore.instance
-                      .collection("Books")
-                      .where("uid",
-                      isEqualTo: BookStore.sharedPreferences.getString(
-                          BookStore.userUID))
-                      .snapshots(),
-                  builder: (context, dataSnapShot) {
-                    print(
-                        ".................before1............................$makeStream");
-
-                    print(
-                        "stream second before  if statment .......................................");
-                    if (!dataSnapShot.hasData) {
-                      print(
-                          "stream second  if statment .......................................");
-
-                      return CircularProgressIndicator();
-                    }
-                    Book book = Book.fromJson(
-                        dataSnapShot.data.documents[0].data);
-                    bookId = book.bookId;
-                    return SizedBox(
-                      height: screenSize.height * 0.09,
-                    );
-                  },
-                ),
 
               // SizedBox(
               //   height: height * 0.09,
@@ -208,7 +159,20 @@ class _MyPhoneNumberState extends State<MyPhoneNumber> {
             .document(
             BookStore.sharedPreferences.getString(BookStore.userUID))
             .updateData({'phoneNumber': _phoneNumberTextEditingController.text})
-            .then((value) => print("User Updated in fireStore"))
+            .then((value) {
+          _phoneNumberTextEditingController.clear();
+          Fluttertoast.showToast(
+            msg: "it\'s Done",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            //timeInSecForIosWeb: 1,
+            backgroundColor: Colors.blueAccent,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+
+              print("User Updated in fireStore");
+            })
             .catchError(
                 (error) {
               print("Failed to update user in firestore: $error");
@@ -221,35 +185,10 @@ class _MyPhoneNumberState extends State<MyPhoneNumber> {
                 },
               );
             });
-        await Firestore.instance
-            .collection("Books")
-            .document(bookId)
-            .updateData({'phoneNumber': _phoneNumberTextEditingController.text})
-            .then((value) => print("User Updated in fireStore"))
-            .catchError(
-                (error) {
-              print("Failed to update user in firestore: $error");
-              showDialog(
-                context: context,
-                builder: (c) {
-                  return ErrorAlertDialog(
-                    message: "Please write your phone 2 ",
-                  );
-                },
-              );
-            });
 
 
-        Fluttertoast.showToast(
-          msg: "it\'s Done",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          //timeInSecForIosWeb: 1,
-          backgroundColor: Colors.blueAccent,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-        _phoneNumberTextEditingController.clear();
+
+
       }
 
     else

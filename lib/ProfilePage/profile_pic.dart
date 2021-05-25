@@ -47,8 +47,7 @@ class _ProfilePicState extends State<ProfilePic> {
                   side: BorderSide(color: Colors.white),
                 ),
                 color: Color(0xFFf5F6F9),
-                onPressed: () {
-takeImage(context);
+                onPressed: () {takeImage(context);
                 },
                 child: Center(child: Icon(Icons.camera_alt_outlined)),
               ),

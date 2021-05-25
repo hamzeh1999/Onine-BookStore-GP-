@@ -11,6 +11,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gradproject/Config/config.dart';
 import 'package:gradproject/Models/BookPdf.dart';
+import 'package:gradproject/ProfilePage/DataUser.dart';
 import 'package:gradproject/Store/Home.dart';
 import 'file:///D:/GradProject/lib/Book_Pdf/pdfUpload.dart';
 import 'package:gradproject/Widgets/customAppBar.dart';
@@ -28,7 +29,6 @@ class pdfFilesState extends State<pdfFiles> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getPermission();
   }
   @override
   Widget build(BuildContext context)
@@ -122,7 +122,8 @@ class pdfFilesState extends State<pdfFiles> {
               Navigator.push(context, route);
 
             },
-            child: Icon(Icons.library_add),
+            child: Icon(Icons.picture_as_pdf_outlined//library_add
+   ),
           ),
 
         ),
@@ -130,10 +131,6 @@ class pdfFilesState extends State<pdfFiles> {
     );
   }
 
-void getPermission() async {
-  print("getPermission");
-  await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-}
 
 }
 
@@ -192,32 +189,33 @@ Widget sourceInfo(BookPdf book, BuildContext context) {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(
-                  child: Text(
-                    book.publisher,
+
+
+
+                StreamBuilder<QuerySnapshot>(
+                  stream:Firestore.instance
+                      .collection("users")
+                      .where("uid",isEqualTo: book.uid)
+                      .snapshots(),
+                  builder: (context,dataSnapShot){
+                    if(!dataSnapShot.hasData)
+                    {
+                      return CircularProgressIndicator();
+                    }
+                    DataUser user = DataUser.fromJson(dataSnapShot.data.documents[0].data);
+                    return Flexible(
+                            child: Text(
+                    user.Name,
                     style: TextStyle(
                       fontSize: (18 / 375.0)*sizeScreen.width,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
                   ),
+                              );
+                  },
                 ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(50),
-                  onTap: () {print("hi");},
-                  child: Container(
-                    padding: EdgeInsets.all((8 / 375.0)*sizeScreen.width),
-                    height: (38 / 375.0)*sizeScreen.width,
-                    width: (38 / 375.0)*sizeScreen.width,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      // ? Colors.black.withOpacity(0.15)
-                      // : Color(0xFF979797).withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.favorite_outlined,color: Colors.white,),
-                  ),
-                ),
+
 
               ],
             ),
@@ -236,8 +234,7 @@ Widget sourceInfo(BookPdf book, BuildContext context) {
 
 Future download2(Dio dio, String url, String savePath) async {
   //get pdf from link
-  Response response = await dio.get(
-    url,
+  Response response = await dio.get(url,
     onReceiveProgress: showDownloadProgress,
     //Received data with List<int>
     options: Options(

@@ -280,6 +280,8 @@ class _RegisterState extends State<Register> {
      "url": userImageUrl,
      "phoneNumber":_numberTextEditingController.text.trim(),
      "password":_passwordtextEditingController.text.trim(),
+     "caseSearch": setSearchParam(_nametextEditingController.text.toUpperCase()),
+
 
 
    });
@@ -290,9 +292,19 @@ class _RegisterState extends State<Register> {
    await BookStore.sharedPreferences.setString(BookStore.userAvatarUrl, userImageUrl);
    await BookStore.sharedPreferences.setString(BookStore.phoneNumber, _numberTextEditingController.text);
 
-
-
-
-
   }
+
+  setSearchParam(String caseNumber) {
+    List<String> caseSearchList = List();
+    String temp = "";
+    for (int i = 0; i < caseNumber.length; i++) {
+      temp = temp + caseNumber[i];
+      caseSearchList.add(temp);
+    }
+    return caseSearchList;
+  }
+
+
+
+
 }

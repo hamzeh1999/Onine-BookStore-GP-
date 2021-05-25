@@ -46,11 +46,13 @@ class _MyEmailState extends State<MyEmail> {
                   SizedBox(width: screenSize.width*0.05,),
                   Text("Your Email : ",style: TextStyle(fontSize: 20,color: Colors.black),),
                   SizedBox(width: screenSize.width*0.02,),
-                  Text(widget.user.Email,style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
+                  Flexible(
+                    child: Text(widget.user.Email,style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
 
-                  ),),
+                    ),),
+                  ),
 
                 ],
               ),

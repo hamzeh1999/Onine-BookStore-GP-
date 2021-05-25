@@ -10,7 +10,6 @@ import 'package:gradproject/DialogBox/loadingDialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gradproject/Widgets/socal_card.dart';
-import '../Store/SciencePage.dart';
 import 'package:gradproject/Config/config.dart';
 import "dart:core";
 
@@ -246,6 +245,7 @@ else
       "email": fuser.email,
       "name": fuser.displayName,
       "url": fuser.photoUrl,
+      "caseSearch": setSearchParam(fuser.displayName.toUpperCase()),
       "phoneNumber":fuser.phoneNumber!=null?fuser.phoneNumber:"No phoneNumber",
       "password":fuser.phoneNumber!=null?"no password to show because Google auth":"No password to show because Google auth",
 
@@ -263,6 +263,14 @@ else
 
 
   }
-
+  setSearchParam(String caseNumber) {
+    List<String> caseSearchList = List();
+    String temp = "";
+    for (int i = 0; i < caseNumber.length; i++) {
+      temp = temp + caseNumber[i];
+      caseSearchList.add(temp);
+    }
+    return caseSearchList;
+  }
 
 }

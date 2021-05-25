@@ -5,6 +5,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gradproject/Config/config.dart';
+import 'package:gradproject/DialogBox/errorDialog.dart';
+import 'package:gradproject/DialogBox/loadingDialog.dart';
 import 'file:///D:/GradProject/lib/Book_Pdf/pdfFiles.dart';
 import 'package:gradproject/Widgets/customAppBar.dart';
 import 'package:gradproject/Widgets/customTextField.dart';
@@ -90,30 +92,56 @@ class _pdfUploadState extends State<pdfUpload> {
 
 
   uploadPdfBook() async {
-    String pdfID = DateTime.now().microsecondsSinceEpoch.toString();
+  if(_nametextEditingController.text.isNotEmpty) {
+    String pdfID = DateTime
+        .now()
+        .microsecondsSinceEpoch
+        .toString();
 
     print("zero function....................................");
 
 
-    File file=await FilePicker.getFile(type: FileType.any);
+    File file = await FilePicker.getFile(type: FileType.custom);
     print("zero 1 function....................................");
 
-    String fileName="$pdfID.PDF";
+    String fileName = "$pdfID";
     print("z\ero 2 function....................................");
 
-    savePDF(file,fileName);
-
+    savePDF(file, fileName);
+  }
+  else
+  {
+    displayDialog("Please fill name of  pdf Book ..");
+  }
 
 
   }
 
+  displayDialog(String msg) {
+    showDialog(
+        context: context,
+        builder: (c) {
+          return ErrorAlertDialog(
+            message: msg,
+          );
+        });
+  }
+
+
+
 
   void savePDF(File file, String fileName) async {
+
+    showDialog(context: context, builder: (c){
+      return LoadingAlertDialog(message: "Uploading , Please Wait..",);
+    });
+
     print("first function....................................");
+
 
     final  StorageReference storageReference =FirebaseStorage.instance.ref().child("PDFBooks");
     print("pdf file.. before...........................................................");
-    StorageUploadTask uploadTask = storageReference.child("pdfBook_$fileName .pdf").putFile(file);
+    StorageUploadTask uploadTask = storageReference.child("pdfBook_$fileName").putFile(file);
     print("pdf file....... after............................................");
 
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
@@ -128,7 +156,8 @@ class _pdfUploadState extends State<pdfUpload> {
     print("seconad function....................................");
 
     Firestore.instance.collection("BookPdf").document(name).setData({
-      "urlPicture":"https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/Items%2Fdigital-book-logo.jpg?alt=media&token=1fe3a373-4de2-4d21-829d-8147df43a933",
+      "urlPicture":
+      'https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/items%2Fdigital-book-logo.jpg?alt=media&token=c61a033d-1b9b-4ece-8b93-aa51ca0c4ceb',
       "urlPdf":url,
       'publisher':BookStore.sharedPreferences.getString(BookStore.userName),
       "name":_nametextEditingController.text,
@@ -136,6 +165,7 @@ class _pdfUploadState extends State<pdfUpload> {
     }).then((value) {print("book pdf uploaded................");});
 
     _nametextEditingController.clear();
+    Navigator.pop(context);
     Route route = MaterialPageRoute(builder: (c)=> pdfFiles() );
     Navigator.pushReplacement(context, route);
 

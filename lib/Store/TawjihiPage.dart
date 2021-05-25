@@ -9,7 +9,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gradproject/Widgets/CustomBottomNavBar.dart';
 import 'package:gradproject/Widgets/customAppBar.dart';
 import 'package:gradproject/Widgets/myDrawer.dart';
-import 'package:provider/provider.dart';
 import 'package:gradproject/Config/config.dart';
 import '../Widgets/loadingWidget.dart';
 

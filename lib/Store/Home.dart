@@ -248,7 +248,6 @@ Widget DisplayForUser(DataUser dataUser,BuildContext context)
   Size screenSize = MediaQuery.of(context).size;
 
 return InkWell(
-
   onTap:(){
     return Navigator.push(context, MaterialPageRoute(builder:(context)=>MyBook(dataUser:dataUser)));
     },
