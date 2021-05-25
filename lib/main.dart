@@ -5,7 +5,7 @@ import 'package:gradproject/Models/Book.dart';
 import 'package:gradproject/Store/Home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Authentication/authenication.dart';
 import 'package:gradproject/Config/config.dart';
@@ -17,12 +17,15 @@ Future<void> main() async {
     [DeviceOrientation.portraitUp],
   ); // To turn off landscape mode
 
+    print("getPermission,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,.........................,,,,,,,,,,,,,");
+    await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+
+
 
 
   BookStore.auth = FirebaseAuth.instance;
   BookStore.sharedPreferences = await  SharedPreferences.getInstance();
   BookStore.firestore = Firestore.instance;
-
   runApp(MyApp());
 }
 

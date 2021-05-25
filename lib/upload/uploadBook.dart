@@ -846,7 +846,8 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
          downloadUrl[1] = await taskSnapshot1.ref.getDownloadURL();
       }
     else
-      {downloadUrl[1]='https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/Items%2Fdownload.png?alt=media&token=d9c9dbf1-06b7-4e18-89fb-2f420a424a62';
+      {
+        downloadUrl[1] = 'https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/items%2Fdownload.png?alt=media&token=46b003e5-ff97-4393-af02-9c8c6a8ab9f0';
       }
     if(image2!=null)
     {    print("image2.............................................................");
@@ -856,7 +857,7 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
     }
     else
       {
-        downloadUrl[2]='https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/Items%2Fdownload.png?alt=media&token=d9c9dbf1-06b7-4e18-89fb-2f420a424a62';
+        downloadUrl[2] ='https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/items%2Fdownload.png?alt=media&token=46b003e5-ff97-4393-af02-9c8c6a8ab9f0';
       }
 
     if(image3!=null)
@@ -868,7 +869,7 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
     }
     else
       {
-        downloadUrl[3] = 'https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/Items%2Fdownload.png?alt=media&token=d9c9dbf1-06b7-4e18-89fb-2f420a424a62';
+        downloadUrl[3] ='https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/items%2Fdownload.png?alt=media&token=46b003e5-ff97-4393-af02-9c8c6a8ab9f0';
       }
 
       if (image4 != null) {
@@ -881,7 +882,7 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
       }
       else
         {
-          downloadUrl[4] = 'https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/Items%2Fdownload.png?alt=media&token=d9c9dbf1-06b7-4e18-89fb-2f420a424a62';
+          downloadUrl[4] ='https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/items%2Fdownload.png?alt=media&token=46b003e5-ff97-4393-af02-9c8c6a8ab9f0';
         }
 
 
@@ -901,6 +902,8 @@ class _UploadPageState extends State<UploadPage> //with AutomaticKeepAliveClient
       "thumbnailUrl" : downloadUrl,
       "title" : _titletextEditingController.text.toUpperCase().trim(),
       "city" : city,
+      'userName':BookStore.sharedPreferences.getString(BookStore.userName),
+      "urlUser":BookStore.sharedPreferences.getString(BookStore.userAvatarUrl),
       "phoneNumber":BookStore.sharedPreferences.getString(BookStore.phoneNumber),
       "category" : category,
       "bookId":bookId,

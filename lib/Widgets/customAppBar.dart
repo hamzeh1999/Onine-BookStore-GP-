@@ -8,7 +8,6 @@ import 'package:gradproject/Store/SciencePage.dart';
 import 'package:flutter/material.dart';
 import 'package:gradproject/Store/Search.dart';
 import 'package:gradproject/Widgets/loadingWidget.dart';
-import 'package:provider/provider.dart';
 
 import 'customTextField.dart';
 

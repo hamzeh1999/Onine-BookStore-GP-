@@ -6,10 +6,10 @@ import 'package:gradproject/ProfilePage/DataUser.dart';
 import 'package:gradproject/ProfilePage/profilePage.dart';
 import 'package:gradproject/Store/Home.dart';
 import 'package:gradproject/Store/Search.dart';
-import 'package:gradproject/Widgets/customAppBar.dart';
 import 'package:gradproject/upload/uploadBook.dart';
+import 'package:gradproject/Messager/messagePage.dart';
 
-enum MenuState { Home, Upload,search,profile,logout }
+enum MenuState { Home, Upload,search,message,profile,logout }
 
 class CustomBottomNavBar extends StatelessWidget {
  // DataUser user;
@@ -45,7 +45,7 @@ class CustomBottomNavBar extends StatelessWidget {
             children: [
 
               IconButton(
-                  icon: Icon(Icons.house_outlined,
+                  icon: Icon(Icons.house_outlined,size: 30,
                     color: MenuState.Home == selectedMenu
                         ? Colors.black
                         : inActiveIconColor,
@@ -54,7 +54,7 @@ class CustomBottomNavBar extends StatelessWidget {
                     Navigator.push(context, MaterialPageRoute(builder:(context)=>Home()));
                   }),
               IconButton(
-                icon: Icon(Icons.upload_outlined,
+                icon: Icon(Icons.upload_outlined,size: 30,
                   color: MenuState.Upload == selectedMenu
                     ? Colors.black
                     : inActiveIconColor,),
@@ -63,15 +63,26 @@ class CustomBottomNavBar extends StatelessWidget {
                   Navigator.push(context, route);
                 },
               ),
+              // IconButton(
+              //   icon:Icon(Icons.search_outlined,color: MenuState.search == selectedMenu
+              //       ? Colors.black
+              //       : inActiveIconColor,),
+              //   onPressed: () {
+              //     Route route = MaterialPageRoute(builder: (c)=> SearchProduct() );
+              //     Navigator.push(context, route);
+              //   },
+              // ),
+
               IconButton(
-                icon:Icon(Icons.search_outlined,color: MenuState.search == selectedMenu
+                icon:Icon(Icons.message_outlined,size: 30,color: MenuState.message == selectedMenu
                     ? Colors.black
                     : inActiveIconColor,),
                 onPressed: () {
-                  Route route = MaterialPageRoute(builder: (c)=> SearchProduct() );
+                  Route route = MaterialPageRoute(builder: (c)=> messagePage() );
                   Navigator.push(context, route);
                 },
               ),
+
 
 
               StreamBuilder<QuerySnapshot>(
@@ -86,7 +97,7 @@ class CustomBottomNavBar extends StatelessWidget {
                   }
                   DataUser user = DataUser.fromJson(dataSnapShot.data.documents[0].data);
                   return IconButton(
-                    icon:Icon(Icons.person_outline,color: MenuState.profile == selectedMenu
+                    icon:Icon(Icons.person_outline,size: 30,color: MenuState.profile == selectedMenu
                         ? Colors.black
                         : inActiveIconColor,),
                     onPressed: () {
@@ -102,20 +113,20 @@ class CustomBottomNavBar extends StatelessWidget {
               ),
 
 
-              IconButton(
-                icon:Icon(Icons.logout,color: MenuState.logout== selectedMenu
-                    ? Colors.black
-                    : inActiveIconColor,),
-                onPressed: () {
-                  BookStore.auth.signOut().then((c) {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => AuthenticScreen()),
-                          (Route<dynamic> route) => false,
-                    );
-                  });
-                },
-              ),
+              // IconButton(
+              //   icon:Icon(Icons.logout,color: MenuState.logout== selectedMenu
+              //       ? Colors.black
+              //       : inActiveIconColor,),
+              //   onPressed: () {
+              //     BookStore.auth.signOut().then((c) {
+              //       Navigator.pushAndRemoveUntil(
+              //         context,
+              //         MaterialPageRoute(builder: (context) => AuthenticScreen()),
+              //             (Route<dynamic> route) => false,
+              //       );
+              //     });
+              //   },
+              // ),
 
             ],
           )),

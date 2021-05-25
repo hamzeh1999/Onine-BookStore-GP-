@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Book {
   //String searchKey;
   String purpose;
+  String urlUser;
   String phoneNumber;
   String userUID;
   String bookId;
@@ -17,9 +18,12 @@ class Book {
   String upperCaseTitle;
   String lowerCaseTitle;
   String newTitle;
+  String userName;
 
   Book(
       {
+        this.userName,
+        this.urlUser,
         this.phoneNumber,
         this.bookId,
         this.userUID,
@@ -43,6 +47,8 @@ class Book {
     lowerCaseTitle=title.substring(1).toLowerCase();
     newTitle=upperCaseTitle+lowerCaseTitle;
     //searchKey=newTitle.substring(0,1);
+    urlUser=json['urlUser'];
+    userName=json['userName'];
 
 
     //shortInfo = json['shortInfo'];
@@ -56,12 +62,14 @@ class Book {
     status = json['status'];
     price = json['price'];
     category = json['category'];
+    userName=json['userName'];
     city = json['city'];
 
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['urlUser']=this.urlUser;
     data['title'] = this.title;
     data['bookId']=this.bookId;
     data['purpose']=this.purpose;
