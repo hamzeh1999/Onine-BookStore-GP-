@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'register.dart';
-import 'package:gradproject/Config/config.dart';
 
 class AuthenticScreen extends StatefulWidget {
   @override
@@ -16,9 +15,7 @@ class _AuthenticScreenState extends State<AuthenticScreen> {
       child: Scaffold(
         appBar: AppBar(
           flexibleSpace: Container(
-            decoration: new BoxDecoration(
-             color: Colors.blueAccent
-            ),
+            decoration: new BoxDecoration(color: Color(0xFF783201)),
           ),
           title: Text(
             "Book Store",
@@ -51,9 +48,7 @@ class _AuthenticScreenState extends State<AuthenticScreen> {
           ),
         ),
         body: Container(
-          decoration: BoxDecoration(
-           color: Colors.lightBlue
-          ),
+          decoration: BoxDecoration(color: Color(0xFFF8F3F0)),
           child: TabBarView(
             children: [
               Login(),

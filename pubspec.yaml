@@ -9,10 +9,12 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 
+
 dependencies:
+
   flutter:
     sdk: flutter
-
+  clay_containers: ^0.3.2
   cupertino_icons: ^0.1.2
   cloud_firestore: ^0.13.2+1
   firebase_auth: ^0.15.4

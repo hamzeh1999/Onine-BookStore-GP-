@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gradproject/Config/config.dart';
-import 'package:gradproject/Models/Book.dart';
 import 'package:gradproject/ProfilePage/DataUser.dart';
 import 'package:gradproject/Messager/chatScreen.dart';
 import 'package:gradproject/Widgets/CustomBottomNavBar.dart';
@@ -38,6 +37,7 @@ class _messagePageState extends State<messagePage> {
       ),
       bottomNavigationBar: CustomBottomNavBar(selectedMenu: MenuState.message),
       appBar: AppBar(
+        backgroundColor: Color(0xFF783201),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(30),
@@ -79,7 +79,7 @@ class _messagePageState extends State<messagePage> {
                       },
                       decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: "Search readers by name :"),
+                          hintText: "Search by name :"),
                     )),
                   ],
                 ),
@@ -157,10 +157,11 @@ class _messagePageState extends State<messagePage> {
     return GestureDetector(
       onTap: () {
         var chatRoomId = getChatRoomIdByUsernames(
-            BookStore.sharedPreferences.getString(BookStore.userUID), user.uid);
+            BookStoreUsers.sharedPreferences.getString(BookStoreUsers.userUID),
+            user.uid);
         Map<String, dynamic> chatRoomInformation = {
           "users": [
-            BookStore.sharedPreferences.getString(BookStore.userUID),
+            BookStoreUsers.sharedPreferences.getString(BookStoreUsers.userUID),
             user.uid
           ]
         };
@@ -178,7 +179,7 @@ class _messagePageState extends State<messagePage> {
         child: Row(
           children: [
             Hero(
-              tag: user.Name,
+              tag: user.uid,
               child: CircleAvatar(
                 radius: 31.5,
                 backgroundColor: Color(0xff122636),
@@ -227,8 +228,8 @@ class _messagePageState extends State<messagePage> {
           .collection("chatrooms")
           .orderBy("lastMessageSendTs", descending: true)
           .where("users",
-              arrayContains:
-                  BookStore.sharedPreferences.getString(BookStore.userUID))
+              arrayContains: BookStoreUsers.sharedPreferences
+                  .getString(BookStoreUsers.userUID))
           .snapshots(),
       builder: (context, snapshot) {
         return snapshot.hasData
@@ -238,7 +239,8 @@ class _messagePageState extends State<messagePage> {
                 itemBuilder: (context, index) {
                   DocumentSnapshot ds = snapshot.data.documents[index];
                   if (ds['users'][0] ==
-                      BookStore.sharedPreferences.getString(BookStore.userUID))
+                      BookStoreUsers.sharedPreferences
+                          .getString(BookStoreUsers.userUID))
                     return ChatRoomListTile(ds['users'][1], ds["lastMessage"],
                         ds['lastMessageSendBy']);
                   else
@@ -248,8 +250,6 @@ class _messagePageState extends State<messagePage> {
             : Center(child: CircularProgressIndicator());
       },
     );
-
-    setState(() {});
   }
 }
 
@@ -274,57 +274,6 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
     //  getUserInfo();
     super.initState();
   }
-//
-// Widget getUserInfo()
-//  {
-//     // return await Firestore.instance
-//     //     .collection("users")
-//     //     .where("uid", isEqualTo:uid)
-//     //     .getDocuments();
-//    print(widget.uid+"............................,,,,,,,,,,,,,,,,.............");
-//     return StreamBuilder<QuerySnapshot>(
-//       stream:Firestore.instance
-//           .collection("users")
-//           .where("uid",isEqualTo:widget.uid)
-//           .snapshots(),
-//       builder: (context,dataSnapShot){
-//         if(dataSnapShot.hasData)
-//         {
-//
-//           print("Entter enter enter if enter if enter if enter if enter if ;';';'';;'';';';';';';';';';';';';';';';';';';;';';'';';");
-//           DataUser user =  DataUser.fromJson(dataSnapShot.data.documents[0].data);
-//           return getThisUserInfo(user);
-//         }
-//         else
-//           return CircularProgressIndicator();
-//
-//         },
-//     );
-//
-//   }
-//
-//
-//   getThisUserInfo(DataUser user) {
-//
-//     print(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;name pgoto name photop");
-//    // hisName = widget.chatRoomId.replaceAll(widget.myname, "").replaceAll("_", "");
-//    // print(hisName);
-//
-// //     if(widget.uid0==BookStore.sharedPreferences.getString(BookStore.userUID))
-// //     hisUid=widget.uid1;
-// // else
-// //   hisUid=widget.uid0;
-//
-//    // QuerySnapshot querySnapshot = getUserInfo(hisUid);
-//    // print(querySnapshot);
-//    // print(".................................................something bla bla........................................"
-//      //   " ${querySnapshot.documents[0].documentID} ${querySnapshot.documents[0]["name"]} ${querySnapshot.documents[0]["url"]}");
-//    hisName=user.Name; //"${querySnapshot.documents[0]["name"]}";
-//    profilePicUrl=user.url;   // "${querySnapshot.documents[0]["url"]}";
-//
-//
-//   }
-//
 
   @override
   Widget build(BuildContext context) {
@@ -351,12 +300,11 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
   Widget smallPicture(DataUser user) {
     String showTalk;
 
-    if(widget.lastMessageSendBy==BookStore.sharedPreferences.getString(BookStore.userName))
-    showTalk='Me';
+    if (widget.lastMessageSendBy ==
+        BookStoreUsers.sharedPreferences.getString(BookStoreUsers.userName))
+      showTalk = 'Me';
     else
-      showTalk=widget.lastMessageSendBy;
-
-
+      showTalk = widget.lastMessageSendBy;
 
     return GestureDetector(
       onTap: () {
@@ -409,7 +357,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
                   SizedBox(height: 3),
                   Row(
                     children: [
-                      Text(showTalk+" : "),
+                      Text(showTalk + " : "),
                       Flexible(
                         child: Text(
                           widget.lastMessage,

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:gradproject/Models/Book.dart';
 import 'package:gradproject/Store/Home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Authentication/authenication.dart';
 import 'package:gradproject/Config/config.dart';
-import 'Store/SciencePage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,15 +15,13 @@ Future<void> main() async {
     [DeviceOrientation.portraitUp],
   ); // To turn off landscape mode
 
-    print("getPermission,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,.........................,,,,,,,,,,,,,");
-    await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+  print(
+      "getPermission,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,.........................,,,,,,,,,,,,,");
+  await PermissionHandler().requestPermissions([PermissionGroup.storage]);
 
-
-
-
-  BookStore.auth = FirebaseAuth.instance;
-  BookStore.sharedPreferences = await  SharedPreferences.getInstance();
-  BookStore.firestore = Firestore.instance;
+  BookStoreUsers.auth = FirebaseAuth.instance;
+  BookStoreUsers.sharedPreferences = await SharedPreferences.getInstance();
+  BookStoreUsers.firestore = Firestore.instance;
   runApp(MyApp());
 }
 
@@ -35,9 +31,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'BookStore',
         debugShowCheckedModeBanner: false,
-        // theme: ThemeData(
-        //   primaryColor: Colors.green,
-        // ),
         home: SplashScreen());
   }
 }
@@ -57,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   DisplaySpalsh() {
     Timer(Duration(seconds: 5), () async {
-      if (await BookStore.auth.currentUser() != null) {
+      if (await BookStoreUsers.auth.currentUser() != null) {
         Route route = MaterialPageRoute(builder: (_) => Home());
         Navigator.pushReplacement(context, route);
       } else {
@@ -71,21 +64,35 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Material(
       child: Container(
-        decoration: new BoxDecoration(
-          color: Colors.cyanAccent
-        ),
-        child: Center(child: SingleChildScrollView(
+        width: 500.0,
+        height: 600.0,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("images/welcome.jpg"), fit: BoxFit.cover)),
+        child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("images/welcome.png"),
-              SizedBox(height: 20.0,),
-              Text("BookStore",
-              style: TextStyle(color: Colors.white),),
-
+              SizedBox(
+                height: 400.0,
+              ),
+              Text(
+                "WELCOME TO THE BOOKSTORE",
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              Divider(
+                height: 20,
+                thickness: 5,
+                indent: 120,
+                endIndent: 120,
+                color: Colors.white,
+              ),
             ],
           ),
-        ),
         ),
       ),
     );

@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gradproject/Models/Book.dart';
@@ -19,7 +18,7 @@ class _ProductImagesState extends State<ProductImages> {
   int selectedImage = 0;
   @override
   Widget build(BuildContext context) {
- Size  screenSize=MediaQuery.of(context).size;
+    Size screenSize = MediaQuery.of(context).size;
     return Column(
       children: [
         SizedBox(
@@ -33,7 +32,8 @@ class _ProductImagesState extends State<ProductImages> {
               ),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (_) {
-                  return DetailScreen(book: widget.book,selectedImage:selectedImage);
+                  return DetailScreen(
+                      book: widget.book, selectedImage: selectedImage);
                 }));
               },
             ),
@@ -42,16 +42,17 @@ class _ProductImagesState extends State<ProductImages> {
         // SizedBox(height: getProportionateScreenWidth(20)),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [...List.generate(widget.book.thumbnailUrl.length,
-                  (index) => buildSmallProductPreview(index,context)),
+          children: [
+            ...List.generate(widget.book.thumbnailUrl.length,
+                (index) => buildSmallProductPreview(index, context)),
           ],
         )
       ],
     );
   }
 
-  GestureDetector buildSmallProductPreview(int index,BuildContext context) {
-    Size screenSize=MediaQuery.of(context).size;
+  GestureDetector buildSmallProductPreview(int index, BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -62,8 +63,8 @@ class _ProductImagesState extends State<ProductImages> {
         duration: Duration(milliseconds: 250),
         margin: EdgeInsets.only(right: 15),
         padding: EdgeInsets.all(8),
-        height: (48 / 375.0) *screenSize.width,
-        width: (48 / 375.0) *screenSize.width,
+        height: (48 / 375.0) * screenSize.width,
+        width: (48 / 375.0) * screenSize.width,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -75,8 +76,8 @@ class _ProductImagesState extends State<ProductImages> {
     );
   }
 }
-class DetailScreen extends StatelessWidget {
 
+class DetailScreen extends StatelessWidget {
   const DetailScreen({
     Key key,
     @required this.book,

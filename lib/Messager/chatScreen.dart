@@ -1,12 +1,9 @@
-
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gradproject/Config/config.dart';
 import 'package:gradproject/DialogBox/loadingDialog.dart';
-import 'package:gradproject/ProfilePage/DataUser.dart';
 import 'package:gradproject/Widgets/myDrawer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:random_string/random_string.dart';
@@ -15,10 +12,7 @@ class ChatScreen extends StatefulWidget {
   String hisName;
   String profilePicUrl;
   String hisUid;
-  ChatScreen({this.hisName,this.profilePicUrl,this.hisUid});
-
-
-
+  ChatScreen({this.hisName, this.profilePicUrl, this.hisUid});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -26,12 +20,10 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   TextEditingController messageTextEdittingController = TextEditingController();
-  String chatRoomId,
-      messageId = "";
+  String chatRoomId, messageId = "";
   Stream messageStream;
   File file;
   String messagePictureUrl;
-
 
   @override
   void initState() {
@@ -39,13 +31,12 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
 
     chatRoomId = getChatRoomIdByUsernames(
-        BookStore.sharedPreferences.getString(BookStore.userUID),
+        BookStoreUsers.sharedPreferences.getString(BookStoreUsers.userUID),
         widget.hisUid);
     chatMessages();
     print(chatRoomId +
         "...................................................................................................");
     //getAndSetMessages();
-
   }
 
   getChatRoomIdByUsernames(String myName, String hisName) {
@@ -62,53 +53,52 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery
-        .of(context)
-        .size;
+    Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       drawer: ClipRRect(
         borderRadius: BorderRadius.only(
             topRight: Radius.circular(44), bottomRight: Radius.circular(44)),
-        child: MyDrawer(),),
+        child: MyDrawer(),
+      ),
       appBar: AppBar(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(30),
           ),
         ),
-
         actions: [
-          Row(
-              children: [
-
-                //SizedBox(width: screenSize.width*0.15,),
-                Hero(
-                  tag: widget.hisName,
-                  child: CircleAvatar(
-                    radius: 26.5,
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      radius: 25.0,
-                      backgroundImage: NetworkImage(widget.profilePicUrl),
-                      backgroundColor: Colors.transparent,
-                    ),
-                  ),
+          Row(children: [
+            //SizedBox(width: screenSize.width*0.15,),
+            Hero(
+              tag: widget.hisUid,
+              child: CircleAvatar(
+                radius: 26.5,
+                backgroundColor: Colors.white,
+                child: CircleAvatar(
+                  radius: 25.0,
+                  backgroundImage: NetworkImage(widget.profilePicUrl),
+                  backgroundColor: Colors.transparent,
                 ),
-                SizedBox(width: screenSize.width * 0.01,),
-                Center(child: Text(
-                  widget.hisName, overflow: TextOverflow.ellipsis,
-                  maxLines: 2,)),
-                SizedBox(width: screenSize.width * 0.3,),
-              ]
-          ),
+              ),
+            ),
+            SizedBox(
+              width: screenSize.width * 0.01,
+            ),
+            Center(
+                child: Text(
+              widget.hisName,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+            )),
+            SizedBox(
+              width: screenSize.width * 0.3,
+            ),
+          ]),
         ],
-//title:Text(widget.hisName,overflow:TextOverflow.ellipsis ,maxLines: 2,) ,
-
       ),
       body: Container(
         child: Stack(
           children: [
-
             chatMessages(),
             Container(
               alignment: Alignment.bottomCenter,
@@ -121,7 +111,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       onTap: () {
                         takeImage(context);
                         // chatMessages();
-
                       },
                       onTapDown: (_) {
                         setState(() {
@@ -140,37 +129,31 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     Expanded(
                         child: Container(
-
-                          margin: EdgeInsets.symmetric(
-                              vertical: 3, horizontal: 5),
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.blueAccent,
-                              width: 0.6,
-                              style: BorderStyle.solid,
-                            ), borderRadius: BorderRadius.circular(30),
-                          ),
-
-                          child: TextField(
-                            controller: messageTextEdittingController,
-                            onChanged: (value) {
-
-                            },
-                            style: TextStyle(color: Colors.blueAccent),
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "type a message",
-                                hintStyle:
-                                TextStyle(
-                                    color: Colors.blueAccent.withOpacity(0.6))),
-                          ),
-                        )),
+                      margin: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.blueAccent,
+                          width: 0.6,
+                          style: BorderStyle.solid,
+                        ),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: TextField(
+                        controller: messageTextEdittingController,
+                        onChanged: (value) {},
+                        style: TextStyle(color: Colors.blueAccent),
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "type a message..",
+                            hintStyle: TextStyle(
+                                color: Colors.blueAccent.withOpacity(0.6))),
+                      ),
+                    )),
                     GestureDetector(
                       onTap: () {
                         addMessage(true);
                         // chatMessages();
-
                       },
                       onTapDown: (_) {
                         setState(() {
@@ -182,43 +165,23 @@ class _ChatScreenState extends State<ChatScreen> {
                           tapped = false;
                         });
                       },
-
-
-                      child: Icon(
-                          Icons.send,
-                          color: tapped ? Colors.deepPurple : Colors.blueAccent
-                      ),
+                      child: Icon(Icons.send,
+                          color:
+                              tapped ? Colors.deepPurple : Colors.blueAccent),
                     )
                   ],
                 ),
               ),
             ),
-
           ],
         ),
       ),
     );
   }
 
-
-  //
-  //
-  // getAndSetMessages() async {
-  //   messageStream = await getChatRoomMessages(chatRoomId);
-  //   print(".....................................................................................getsetmessss.....");
-  //   print(messageStream);
-  //   setState(() {});
-  // }
-  // Future<Stream<QuerySnapshot>> getChatRoomMessages(chatRoomId) async {
-  //   return Firestore.instance
-  //       .collection("chatrooms")
-  //       .document(chatRoomId)
-  //       .collection("chats")
-  //       .orderBy("ts", descending:true)
-  //       .snapshots();
-  // }
   Widget chatMessages() {
-    print("hi ...............................................c00000000000000000000000...................................");
+    print(
+        "hi ...............................................c00000000000000000000000...................................");
 
     return StreamBuilder(
       stream: Firestore.instance
@@ -230,96 +193,110 @@ class _ChatScreenState extends State<ChatScreen> {
       builder: (context, snapshot) {
         return snapshot.hasData
             ? ListView.builder(
-            padding: EdgeInsets.only(bottom: 70, top: 16),
-            itemCount: snapshot.data.documents.length,
-            reverse: true,
-            itemBuilder: (context, index) {
-              print("hi ...............................................chatMessages....................................");
-              DocumentSnapshot ds = snapshot.data.documents[index];
-              return chatMessageTile(ds['imgUrl'], ds["message"], BookStore.sharedPreferences.getString(BookStore.userName) == ds["sendBy"]);
-            })
+                padding: EdgeInsets.only(bottom: 70, top: 16),
+                itemCount: snapshot.data.documents.length,
+                reverse: true,
+                itemBuilder: (context, index) {
+                  print(
+                      "hi ...............................................chatMessages....................................");
+                  DocumentSnapshot ds = snapshot.data.documents[index];
+                  return chatMessageTile(
+                      ds['imgUrl'],
+                      ds["message"],
+                      BookStoreUsers.sharedPreferences
+                              .getString(BookStoreUsers.userName) ==
+                          ds["sendBy"]);
+                })
             : Center(child: CircularProgressIndicator());
       },
     );
   }
 
-  Widget chatMessageTile(String pictureUrl, String message, bool sendByMe,) {
+  Widget chatMessageTile(
+    String pictureUrl,
+    String message,
+    bool sendByMe,
+  ) {
     Size screenSize = MediaQuery.of(context).size;
     return Row(
-      mainAxisAlignment: sendByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment:
+          sendByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         Column(
           children: [
-            message == ("picture sended") ? SizedBox(
-              height: screenSize.height * .5,) : Text(""),
-            SizedBox(height: screenSize.height * 0.05,),
-            sendByMe ? Text("") : CircleAvatar(
-              radius: 20.0,
-              backgroundImage: NetworkImage(widget.profilePicUrl),
-              backgroundColor: Colors.transparent,
+            message == ("picture sended")
+                ? SizedBox(
+                    height: screenSize.height * .5,
+                  )
+                : Text(""),
+            SizedBox(
+              height: screenSize.height * 0.05,
             ),
+            sendByMe
+                ? Text("")
+                : CircleAvatar(
+                    radius: 20.0,
+                    backgroundImage: NetworkImage(widget.profilePicUrl),
+                    backgroundColor: Colors.transparent,
+                  ),
           ],
         ),
-
 
         Flexible(
           child: Column(
             children: [
-              SizedBox(height: screenSize.height * 0.02,),
+              SizedBox(
+                height: screenSize.height * 0.02,
+              ),
               Container(
-
                   margin: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                   decoration: BoxDecoration(
-
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(24),
                       bottomRight:
-                      sendByMe ? Radius.circular(0) : Radius.circular(24),
+                          sendByMe ? Radius.circular(0) : Radius.circular(24),
                       topRight: Radius.circular(24),
                       bottomLeft:
-                      sendByMe ? Radius.circular(24) : Radius.circular(0),
+                          sendByMe ? Radius.circular(24) : Radius.circular(0),
                     ),
-                    color: message == 'picture sended' ? Colors.white : sendByMe
-                        ? Colors.blue
-                        : Colors.blueGrey,
+                    color: message == 'picture sended'
+                        ? Colors.white
+                        : sendByMe
+                            ? Colors.blue
+                            : Colors.blueGrey,
                   ),
                   padding: EdgeInsets.all(10),
-                  child: message == 'picture sended' ? ClipRRect(
-                    borderRadius: BorderRadius.circular(45),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return DetailScreen(profilePic: pictureUrl);
-                        }));
-                      },
-                      child: Hero(
-                        tag: pictureUrl.toString(),
-                        child: Image.network(
-                          pictureUrl,
-                          height: screenSize.height * 0.5,
-                          width: screenSize.width * 0.7,
-                        ),
-                      ),
-                    ),
-                  ) : Text(message, style: TextStyle(color: Colors.white),
-                  )),
+                  child: message == 'picture sended'
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(45),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (_) {
+                                return DetailScreen(profilePic: pictureUrl);
+                              }));
+                            },
+                            child: Hero(
+                              tag: pictureUrl.toString(),
+                              child: Image.network(
+                                pictureUrl,
+                                height: screenSize.height * 0.5,
+                                width: screenSize.width * 0.7,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Text(
+                          message,
+                          style: TextStyle(color: Colors.white),
+                        )),
             ],
           ),
         ),
-         // ignore: unrelated_type_equality_checks
-
-
-
+        // ignore: unrelated_type_equality_checks
       ],
     );
   }
-
-
-
-
-
-
-
 
   takeImage(BuildContext context) {
     return showDialog(
@@ -332,9 +309,9 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           title: Center(
             child: Text(
-              "item Image :",
-              style: TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.bold),
+              "Select Options :",
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ),
           children: [
@@ -375,18 +352,19 @@ class _ChatScreenState extends State<ChatScreen> {
 
   capturePhotoWithCamera() async {
     Navigator.pop(context);
+    // ignore: deprecated_member_use
     File imageFile = await ImagePicker.pickImage(
         source: ImageSource.camera, maxHeight: 680.0, maxWidth: 970.0);
     setState(() {
       file = imageFile;
     });
 
-    if (file != null)
-      updateToFirebase();
+    if (file != null) updateToFirebase();
   }
 
   pickPhotoFromGallery() async {
     Navigator.pop(context);
+    // ignore: deprecated_member_use
     File imageFile = await ImagePicker.pickImage(
       source: ImageSource.gallery,
     );
@@ -394,8 +372,7 @@ class _ChatScreenState extends State<ChatScreen> {
       file = imageFile;
     });
 
-    if (file != null)
-      updateToFirebase();
+    if (file != null) updateToFirebase();
   }
 
   updateToFirebase() async {
@@ -406,14 +383,14 @@ class _ChatScreenState extends State<ChatScreen> {
             message: "Upload Photo ....",
           );
         });
-    final StorageReference storageReference = FirebaseStorage.instance.ref()
-        .child("PictureMessages");
+    final StorageReference storageReference =
+        FirebaseStorage.instance.ref().child("PictureMessages");
     String messagepicureId = (randomAlphaNumeric(12)).toString();
 
     print(
         "image0.............................................................");
-    StorageUploadTask uploadTask = storageReference.child(
-        "message $messagepicureId .jpg").putFile(file);
+    StorageUploadTask uploadTask =
+        storageReference.child("message $messagepicureId .jpg").putFile(file);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     messagePictureUrl = await taskSnapshot.ref.getDownloadURL();
 
@@ -431,7 +408,6 @@ class _ChatScreenState extends State<ChatScreen> {
         messageId = randomAlphaNumeric(12);
       }
 
-
       Firestore.instance
           .collection("chatrooms")
           .document(chatRoomId)
@@ -439,7 +415,8 @@ class _ChatScreenState extends State<ChatScreen> {
           .document(messageId)
           .setData({
         "message": message,
-        "sendBy": BookStore.sharedPreferences.getString(BookStore.userName),
+        "sendBy":
+            BookStoreUsers.sharedPreferences.getString(BookStoreUsers.userName),
         "ts": lastMessageTs,
         "imgUrl": messagePictureUrl,
       }).then((value) {
@@ -449,10 +426,9 @@ class _ChatScreenState extends State<ChatScreen> {
             .updateData({
           "lastMessage": message,
           "lastMessageSendTs": lastMessageTs,
-          "lastMessageSendBy": BookStore.sharedPreferences.getString(
-              BookStore.userName),
+          "lastMessageSendBy": BookStoreUsers.sharedPreferences
+              .getString(BookStoreUsers.userName),
         });
-
 
         if (sendClicked) {
           // remove the text in the message input field
@@ -463,11 +439,6 @@ class _ChatScreenState extends State<ChatScreen> {
       });
     }
   }
-
-
-
-
-
 
   addMessagePicture() async {
     var lastMessageTs = DateTime.now();
@@ -480,13 +451,11 @@ class _ChatScreenState extends State<ChatScreen> {
         .collection("chatrooms")
         .document(chatRoomId)
         .collection("chats")
-        .document(messageId + DateTime
-        .now()
-        .millisecondsSinceEpoch
-        .toString())
+        .document(messageId + DateTime.now().millisecondsSinceEpoch.toString())
         .setData({
       "message": 'picture sended',
-      "sendBy": BookStore.sharedPreferences.getString(BookStore.userName),
+      "sendBy":
+          BookStoreUsers.sharedPreferences.getString(BookStoreUsers.userName),
       "ts": lastMessageTs,
       "imgUrl": messagePictureUrl,
     }).then((value) async {
@@ -496,21 +465,15 @@ class _ChatScreenState extends State<ChatScreen> {
           .updateData({
         "lastMessage": 'picture sended',
         "lastMessageSendTs": lastMessageTs,
-        "lastMessageSendBy": BookStore.sharedPreferences.getString(
-            BookStore.userName),
+        "lastMessageSendBy":
+            BookStoreUsers.sharedPreferences.getString(BookStoreUsers.userName),
       });
     });
     Navigator.pop(context);
   }
-
-
-
-
 }
 
-
 class DetailScreen extends StatelessWidget {
-
   const DetailScreen({
     Key key,
     @required this.profilePic,

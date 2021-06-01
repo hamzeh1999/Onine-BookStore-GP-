@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "727173464176-7dd2844135ie1omlh5k558nobatcjkvo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.osama.eshop",
+            "certificate_hash": "bd317d0040fd69f57790dcb4958bb4f2083c2513"
+          }
+        },
+        {
           "client_id": "727173464176-amunjelb1agmi42o6cffaorbloq37fu5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

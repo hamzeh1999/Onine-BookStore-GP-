@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gradproject/Models/Book.dart';
 import 'package:gradproject/Models/section_title.dart';
 import 'package:gradproject/ProfilePage/DataUser.dart';
 import 'package:gradproject/Store/MyBook.dart';
 import 'package:gradproject/Store/NovelPage.dart';
 import 'package:gradproject/Store/TawjihiPage.dart';
-import 'file:///D:/GradProject/lib/Book_Pdf/pdfFiles.dart';
-import 'file:///D:/GradProject/lib/Book_Details/product_page.dart';
 import 'package:gradproject/Store/SciencePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +12,9 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gradproject/Widgets/CustomBottomNavBar.dart';
 import 'package:gradproject/Widgets/customAppBar.dart';
 import 'package:gradproject/Widgets/myDrawer.dart';
-import 'package:intl/intl.dart';
-import 'package:gradproject/Config/config.dart';
+import '../Book_Details/product_page.dart';
+import '../Book_Pdf/pdfFiles.dart';
 import '../Widgets/loadingWidget.dart';
-
-
-
 
 class Home extends StatefulWidget {
   @override
@@ -28,277 +22,248 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
+
   @override
   Widget build(BuildContext context) {
-   Size screenSize = MediaQuery.of(context).size;
+    Size screenSize = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         appBar: MyAppBar(),
         drawer: ClipRRect(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(44), bottomRight: Radius.circular(44)),
-          child: MyDrawer(),),
-
-        backgroundColor: Colors.white,
+          child: MyDrawer(),
+        ),
+        backgroundColor: Color(0xFFF8F3F0),
         body: SingleChildScrollView(
-          child: Column(
+            child: Column(children: [
+          // SizedBox(height: screenSize.height*0.01,),
+          SizedBox(
+            height: 10.0,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: (20)),
+            child: SectionTitle(
+              color: Color(0xff122636),
+              title: " The Readers :",
+              press: () {},
+            ),
+          ),
+          SizedBox(height: screenSize.height * 0.02),
+          Container(
+            width: screenSize.width,
+            height: screenSize.height * 0.14,
+            child: CustomScrollView(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              slivers: [
+                StreamBuilder<QuerySnapshot>(
+                  stream: Firestore.instance.collection("users").snapshots(),
+                  builder: (context, dataSnapShot) {
+                    return !dataSnapShot.hasData
+                        ? SliverToBoxAdapter(
+                            child: Center(
+                              child: circularProgress(),
+                            ),
+                          )
+                        : SliverStaggeredGrid.countBuilder(
+                            crossAxisCount: 1,
+                            staggeredTileBuilder: (c) => StaggeredTile.fit(1),
+                            itemBuilder: (context, index) {
+                              DataUser user = DataUser.fromJson(
+                                  dataSnapShot.data.documents[index].data);
+                              return DisplayForUser(user, context);
+                            },
+                            itemCount: dataSnapShot.data.documents.length,
+                          );
+                  },
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: (5)),
+          Column(
             children: [
-              // SizedBox(height: screenSize.height*0.01,),
-              Container(
-                width: double.infinity,
-                margin: EdgeInsets.all(10.0),
-                padding: EdgeInsets.symmetric(
-                  horizontal:10.0 ,
-                  vertical: 10.0,
-                ),
-                decoration: BoxDecoration(
-                  color:  Color(0xff122636),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-
-
-                child: Text.rich(
-                  TextSpan(
-                    style: TextStyle(color: Colors.white),
-                    children: [
-                      //    TextSpan(text: "Book Store\n"),
-                      TextSpan(
-                        text: "Welcome To our BookStore",
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-
-              ),
+              // SizedBox(height: screenSize.height*0.02),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: (20)),
                 child: SectionTitle(
-                  color:Color(0xff122636),
-                  title: " The Readers :",
+                  color: Color(0xff122636),
+                  title: "Category :",
                   press: () {},
                 ),
               ),
-              SizedBox(height:screenSize.height*0.02),
-              Container(
-                width:screenSize.width,
-                height: screenSize.height*0.14,
-                child: CustomScrollView(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  slivers: [
-                    StreamBuilder<QuerySnapshot>(
-                      stream: Firestore.instance
-                          .collection("users")
-                          .snapshots(),
-                      builder: (context, dataSnapShot) {
-                        return !dataSnapShot.hasData
-                            ? SliverToBoxAdapter(
-                              child: Center(
-                            child: circularProgress(),
-                          ),
-                        )
-                            : SliverStaggeredGrid.countBuilder(
-                          crossAxisCount: 1,
-                          staggeredTileBuilder: (c) => StaggeredTile.fit(1),
-                          itemBuilder: (context, index) {
-                          DataUser user = DataUser.fromJson(
-                                dataSnapShot.data.documents[index].data);
-                            return DisplayForUser(user, context);
-                          },
-                          itemCount:dataSnapShot.data.documents.length,
-                        );
+              SizedBox(height: (5)),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    SpecialOfferCard(
+                      image: "images/Image Banner 3.png",
+                      category: "Science",
+                      press: () {
+                        Route route = MaterialPageRoute(
+                            builder: (context) => SciencePage());
+                        Navigator.push(context, route);
+                      },
+                    ),
+                    SpecialOfferCard(
+                      image: "images/Image Banner 2.jpg",
+                      category: "Novels",
+                      press: () {
+                        Route route = MaterialPageRoute(
+                            builder: (context) => NovelsPage());
+                        Navigator.push(context, route);
+                      },
+                    ),
+                    SpecialOfferCard(
+                      image: "images/Image Banner 4.PNG",
+                      category: "Tawjihi",
+                      press: () {
+                        Route route = MaterialPageRoute(
+                            builder: (context) => TawjihiPage());
+                        Navigator.push(context, route);
+                      },
+                    ),
+                    SpecialOfferCard(
+                      image: "images/Image Banner 5.png",
+                      category: "PDF",
+                      press: () {
+                        Route route =
+                            MaterialPageRoute(builder: (context) => pdfFiles());
+                        Navigator.push(context, route);
+
+                        print(
+                            "height: $screenSize.height ................. width :$screenSize.width");
                       },
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: (5)),
-              Column(
-                children: [
-                 // SizedBox(height: screenSize.height*0.02),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: (20)),
-                    child: SectionTitle(
-                     color: Color(0xff122636),
-                      title: "Category :",
-                      press: () {},
-                    ),
-                  ),
-                  SizedBox(height: (5)),
-                  SingleChildScrollView(
+            ],
+          ),
+          SizedBox(height: (15)),
+          Column(children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: (20)),
+              child: SectionTitle(
+                  title: "Recent Books :", color: Colors.black, press: () {}),
+            ),
+            SizedBox(
+              height: 7,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: (0)),
+              child: Container(
+                width: screenSize.width,
+                height: screenSize.height * 0.30,
+                child: CustomScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        SpecialOfferCard(
-                          image: "images/Image Banner 3.png",
-                          category: "Science",
-                          press: () {
-                            Route route = MaterialPageRoute(builder:(context)=>SciencePage());
-                            Navigator.push(context, route);},
-                        ),
-                        SpecialOfferCard(
-                          image: "images/Image Banner 2.jpg",
-                          category: "Novels",
-                          press: () {
-                            Route route = MaterialPageRoute(builder:(context)=>NovelsPage());
-                          Navigator.push(context, route);},
-                        ),
-                        SpecialOfferCard(
-                          image: "images/Image Banner 4.PNG",
-                          category: "Tawijehi",
-                          press: () { Route route = MaterialPageRoute(builder:(context)=>TawjihiPage());
-                          Navigator.push(context, route);},
-                        ),SpecialOfferCard(
-                          image: "images/Image Banner 5.png",
-                          category: "PDF",
-                          press: () {
-                            Route route = MaterialPageRoute(builder:(context)=>pdfFiles());
-                            Navigator.push(context, route);
-
-
-
-                            print("height: $screenSize.height ................. width :$screenSize.width");},
-                        ),
-                      ],
-                    ),
-                  ),
-
-                ],
-              ),
-              SizedBox(height: (15)),
-              Column(
-                children: [
-                Padding(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: (20)),
-                  child: SectionTitle(title: "Recent Books :", color: Color(0xff122636),press: () {}),
-                ),
-                SizedBox(height:5,),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: (0)),
-                  child: Container(
-                    width: screenSize.width,
-                      height: screenSize.height*0.39,
-                          child: CustomScrollView(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              slivers: [
-                              StreamBuilder<QuerySnapshot> (
-                        stream:  Firestore.instance
+                    shrinkWrap: true,
+                    slivers: [
+                      StreamBuilder<QuerySnapshot>(
+                        stream: Firestore.instance
                             .collection("Books")
                             .limit(6)
                             .orderBy("publishedDate", descending: true)
                             .snapshots(),
-                        builder: (context, dataSnapShot)
-                        {
-                          return!dataSnapShot.hasData
+                        builder: (context, dataSnapShot) {
+                          return !dataSnapShot.hasData
                               ? SliverToBoxAdapter(
                                   child: Center(
-                                child: circularProgress(),
-                            ),
-                          )
+                                    child: circularProgress(),
+                                  ),
+                                )
                               : SliverStaggeredGrid.countBuilder(
-                            crossAxisCount: 1,
-                            staggeredTileBuilder: (c) => StaggeredTile.fit(1),
-                            itemBuilder: (context, index) {
-                              Book model = Book.fromJson(
-                                  dataSnapShot.data.documents[index].data);
-                              return sourceInfo(model, context);
-                            },
-                            itemCount:dataSnapShot.data.documents.length,
-                          );
+                                  crossAxisCount: 1,
+                                  staggeredTileBuilder: (c) =>
+                                      StaggeredTile.fit(1),
+                                  itemBuilder: (context, index) {
+                                    Book model = Book.fromJson(dataSnapShot
+                                        .data.documents[index].data);
+                                    return sourceInfo(model, context);
+                                  },
+                                  itemCount: dataSnapShot.data.documents.length,
+                                );
                         },
                       ),
-                            ]
-                          ),
-                  ),
-                ),
-          ]
+                    ]),
               ),
-                  ]
-          )
-        ),
-
-                  bottomNavigationBar: CustomBottomNavBar(selectedMenu: MenuState.Home),
-
-        ),
-
-      );
-
+            ),
+          ]),
+        ])),
+        bottomNavigationBar: CustomBottomNavBar(selectedMenu: MenuState.Home),
+      ),
+    );
   }
-
 }
 
-
-Widget DisplayForUser(DataUser dataUser,BuildContext context)
-{
-  Size screenSize = MediaQuery.of(context).size;
-
-return InkWell(
-  onTap:(){
-    return Navigator.push(context, MaterialPageRoute(builder:(context)=>MyBook(dataUser:dataUser)));
+// ignore: non_constant_identifier_names
+Widget DisplayForUser(DataUser dataUser, BuildContext context) {
+  return InkWell(
+    onTap: () {
+      return Navigator.push(context,
+          MaterialPageRoute(builder: (context) => MyBook(dataUser: dataUser)));
     },
-  child:   SingleChildScrollView(
-    child: Column(
-      children: <Widget>[
-        CircleAvatar(
-          radius: 31.5,
-          backgroundColor:Color(0xff122636),
-          child: CircleAvatar(
-            radius: 30.0,
-            backgroundImage: NetworkImage(dataUser.url),
-            backgroundColor: Colors.transparent,
-          ),
-        ),
-        SizedBox(
-          //width: screenSize.width-100,
-          child: Text(dataUser.Name,textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            softWrap: true,
-            style: TextStyle(
-              fontWeight:FontWeight.normal,
+    child: SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          CircleAvatar(
+            radius: 39.0,
+            backgroundColor: Color(0xff122636),
+            child: CircleAvatar(
+              radius: 37.0,
+              backgroundImage: NetworkImage(dataUser.url),
+              backgroundColor: Colors.transparent,
             ),
           ),
-        ),          ],
+          SizedBox(
+            //width: screenSize.width-100,
+            child: Text(
+              dataUser.Name,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              softWrap: true,
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
-  ),
-);
+  );
 }
 
 Widget sourceInfo(Book book, BuildContext context) {
-  Size sizeScreen= MediaQuery.of(context).size;
+  Size sizeScreen = MediaQuery.of(context).size;
   return Padding(
-    padding: EdgeInsets.only(right: (20 / 375.0)*sizeScreen.width ,left:(10 / 375.0)*sizeScreen.width),//(40 / 375.0)*sizeScreen.height
+    padding: EdgeInsets.only(
+        right: (20 / 375.0) * sizeScreen.width,
+        left: (10 / 375.0) * sizeScreen.width), //(40 / 375.0)*sizeScreen.height
     child: SizedBox(
-      height:sizeScreen.height*.6,
+      height: sizeScreen.height * 0.6,
       child: GestureDetector(
         onTap: () {
-          Route route = MaterialPageRoute(builder: (c)=> ProductPage(BookModel : book) );
+          Route route =
+              MaterialPageRoute(builder: (c) => ProductPage(BookModel: book));
           Navigator.push(context, route);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AspectRatio(
-              aspectRatio: 1.19,
+              aspectRatio: 1.3,
               child: Container(
-                padding: EdgeInsets.all((20 / 375.0)*sizeScreen.width),
+                padding: EdgeInsets.all(0),
                 decoration: BoxDecoration(
-                  color: Color(0xff122636),
-                  borderRadius: BorderRadius.circular(15),
+                  color: Color(0xFFDC5F1F),
+                  borderRadius: BorderRadius.circular(25),
                 ),
                 child: Hero(
                   tag: book.bookId.toString(),
@@ -316,22 +281,20 @@ Widget sourceInfo(Book book, BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  book.price.toString()+" JD",
+                  book.city,
                   style: TextStyle(
-                    fontSize: (18 / 375.0)*sizeScreen.width,
+                    fontSize: (18 / 375.0) * sizeScreen.width,
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
                   ),
                 ),
                 Text(
-                  book.city,
+                  book.price.toString() + " JD",
                   style: TextStyle(
-                    fontSize: (18 / 375.0)*sizeScreen.width,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF820120)),
                 ),
-
               ],
             ),
           ],
@@ -339,7 +302,6 @@ Widget sourceInfo(Book book, BuildContext context) {
       ),
     ),
   );
-
 }
 
 class SpecialOfferCard extends StatelessWidget {
@@ -370,7 +332,6 @@ class SpecialOfferCard extends StatelessWidget {
                   image,
                   fit: BoxFit.cover,
                   width: double.infinity,
-
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -412,4 +373,3 @@ class SpecialOfferCard extends StatelessWidget {
     );
   }
 }
-

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,34 +6,34 @@ import 'package:flutter/material.dart';
 import 'package:gradproject/Config/config.dart';
 import 'package:gradproject/DialogBox/errorDialog.dart';
 import 'package:gradproject/DialogBox/loadingDialog.dart';
-import 'file:///D:/GradProject/lib/Book_Pdf/pdfFiles.dart';
 import 'package:gradproject/Widgets/customAppBar.dart';
 import 'package:gradproject/Widgets/customTextField.dart';
 import 'package:gradproject/Widgets/myDrawer.dart';
 
+import 'pdfFiles.dart';
+
 class pdfUpload extends StatefulWidget {
-
-
   @override
   _pdfUploadState createState() => _pdfUploadState();
 }
 
 class _pdfUploadState extends State<pdfUpload> {
-  final TextEditingController _nametextEditingController = TextEditingController();
+  final TextEditingController _nametextEditingController =
+      TextEditingController();
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
 
     return SafeArea(
-      child:Scaffold(
+      child: Scaffold(
         appBar: MyAppBar(),
         drawer: ClipRRect(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(44), bottomRight: Radius.circular(44)),
-          child: MyDrawer(),),
-        body:  SingleChildScrollView(
+          child: MyDrawer(),
+        ),
+        body: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(
@@ -48,16 +47,14 @@ class _pdfUploadState extends State<pdfUpload> {
                 hintText: "write name of pdf:",
                 specifer: 1,
                 isObsecure: false,
-                controller:_nametextEditingController,
+                controller: _nametextEditingController,
               ),
               SizedBox(
                 height: screenSize.height * 0.09,
               ),
-
               ElevatedButton(
                 onPressed: () {
-                    uploadPdfBook();
-
+                  uploadPdfBook();
                 },
                 style: OutlinedButton.styleFrom(
                   elevation: 9,
@@ -81,40 +78,26 @@ class _pdfUploadState extends State<pdfUpload> {
             ],
           ),
         ),
-
       ),
     );
-
-
-
-
   }
-
 
   uploadPdfBook() async {
-  if(_nametextEditingController.text.isNotEmpty) {
-    String pdfID = DateTime
-        .now()
-        .microsecondsSinceEpoch
-        .toString();
+    if (_nametextEditingController.text.isNotEmpty) {
+      String pdfID = DateTime.now().microsecondsSinceEpoch.toString();
 
-    print("zero function....................................");
+      print("zero function....................................");
 
+      File file = await FilePicker.getFile(type: FileType.custom);
+      print("zero 1 function....................................");
 
-    File file = await FilePicker.getFile(type: FileType.custom);
-    print("zero 1 function....................................");
+      String fileName = "$pdfID";
+      print("z\ero 2 function....................................");
 
-    String fileName = "$pdfID";
-    print("z\ero 2 function....................................");
-
-    savePDF(file, fileName);
-  }
-  else
-  {
-    displayDialog("Please fill name of  pdf Book ..");
-  }
-
-
+      savePDF(file, fileName);
+    } else {
+      displayDialog("Please fill name of  pdf Book ..");
+    }
   }
 
   displayDialog(String msg) {
@@ -127,52 +110,50 @@ class _pdfUploadState extends State<pdfUpload> {
         });
   }
 
-
-
-
   void savePDF(File file, String fileName) async {
-
-    showDialog(context: context, builder: (c){
-      return LoadingAlertDialog(message: "Uploading , Please Wait..",);
-    });
+    showDialog(
+        context: context,
+        builder: (c) {
+          return LoadingAlertDialog(
+            message: "Uploading , Please Wait..",
+          );
+        });
 
     print("first function....................................");
 
-
-    final  StorageReference storageReference =FirebaseStorage.instance.ref().child("PDFBooks");
-    print("pdf file.. before...........................................................");
-    StorageUploadTask uploadTask = storageReference.child("pdfBook_$fileName").putFile(file);
+    final StorageReference storageReference =
+        FirebaseStorage.instance.ref().child("PDFBooks");
+    print(
+        "pdf file.. before...........................................................");
+    StorageUploadTask uploadTask =
+        storageReference.child("pdfBook_$fileName").putFile(file);
     print("pdf file....... after............................................");
 
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     print("first after.......... url....................................");
-    String url=await taskSnapshot.ref.getDownloadURL();
+    String url = await taskSnapshot.ref.getDownloadURL();
 
-    documentFileUpload(url,fileName);
-
+    documentFileUpload(url, fileName);
   }
 
-  void documentFileUpload(String url,String name) {
+  void documentFileUpload(String url, String name) {
     print("seconad function....................................");
 
     Firestore.instance.collection("BookPdf").document(name).setData({
       "urlPicture":
-      'https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/items%2Fdigital-book-logo.jpg?alt=media&token=c61a033d-1b9b-4ece-8b93-aa51ca0c4ceb',
-      "urlPdf":url,
-      'publisher':BookStore.sharedPreferences.getString(BookStore.userName),
-      "name":_nametextEditingController.text,
-      "uid":BookStore.sharedPreferences.getString(BookStore.userUID),
-    }).then((value) {print("book pdf uploaded................");});
+          'https://firebasestorage.googleapis.com/v0/b/gradproject-5d48e.appspot.com/o/static%20pictures%2Fdigital-book-logo.jpg?alt=media&token=ce97ddb8-9bbc-492f-9009-59f0d16e26ad',
+      "urlPdf": url,
+      'publisher':
+          BookStoreUsers.sharedPreferences.getString(BookStoreUsers.userName),
+      "name": _nametextEditingController.text,
+      "uid": BookStoreUsers.sharedPreferences.getString(BookStoreUsers.userUID),
+    }).then((value) {
+      print("book pdf uploaded................");
+    });
 
     _nametextEditingController.clear();
     Navigator.pop(context);
-    Route route = MaterialPageRoute(builder: (c)=> pdfFiles() );
+    Route route = MaterialPageRoute(builder: (c) => pdfFiles());
     Navigator.pushReplacement(context, route);
-
   }
-
-
-
-
-
 }

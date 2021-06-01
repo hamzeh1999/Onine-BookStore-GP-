@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileMenu extends StatelessWidget {
-  const ProfileMenu({
-    Key key,
-    @required this.text,
-    @required this.icon,
-    this.press,
-    this.icon2
-  }) : super(key: key);
+  const ProfileMenu(
+      {Key key,
+      @required this.text,
+      @required this.icon,
+      this.press,
+      this.icon2})
+      : super(key: key);
 
   final String text;
-   final IconData  icon;
+  final IconData icon;
   final IconData icon2;
   final VoidCallback press;
 
@@ -19,6 +18,7 @@ class ProfileMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      // ignore: deprecated_member_use
       child: FlatButton(
         padding: EdgeInsets.all(20),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -26,8 +26,8 @@ class ProfileMenu extends StatelessWidget {
         onPressed: press,
         child: Row(
           children: [
-
-            Icon(icon,
+            Icon(
+              icon,
               color: Colors.black,
               size: 22,
             ),

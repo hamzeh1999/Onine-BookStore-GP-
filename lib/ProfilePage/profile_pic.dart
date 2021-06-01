@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gradproject/Config/config.dart';
 import 'package:gradproject/DialogBox/errorDialog.dart';
 import 'package:gradproject/DialogBox/loadingDialog.dart';
@@ -19,7 +17,6 @@ class ProfilePic extends StatefulWidget {
 }
 
 class _ProfilePicState extends State<ProfilePic> {
-
   File file;
   String userImageUrl = "";
 
@@ -47,7 +44,8 @@ class _ProfilePicState extends State<ProfilePic> {
                   side: BorderSide(color: Colors.white),
                 ),
                 color: Color(0xFFf5F6F9),
-                onPressed: () {takeImage(context);
+                onPressed: () {
+                  takeImage(context);
                 },
                 child: Center(child: Icon(Icons.camera_alt_outlined)),
               ),
@@ -65,7 +63,7 @@ class _ProfilePicState extends State<ProfilePic> {
       builder: (con) {
         return SimpleDialog(
           shape: RoundedRectangleBorder(
-            side: BorderSide(color:Color(0xff122636), width: 4),
+            side: BorderSide(color: Color(0xff122636), width: 4),
             borderRadius: BorderRadius.circular(10),
           ),
           title: Text(
@@ -135,7 +133,7 @@ class _ProfilePicState extends State<ProfilePic> {
       String imageFileName = DateTime.now().microsecondsSinceEpoch.toString();
 
       StorageReference storageReference =
-      FirebaseStorage.instance.ref().child(imageFileName);
+          FirebaseStorage.instance.ref().child(imageFileName);
 
       StorageUploadTask storageUploadTask = storageReference.putFile(file);
 
@@ -145,11 +143,10 @@ class _ProfilePicState extends State<ProfilePic> {
         userImageUrl = urlImage;
       });
 
-//print("EcommerceApp.forProfile.uidEcommerceApp.forProfile.uid ..................");
       Firestore.instance
           .collection("users")
-          .document(
-          BookStore.sharedPreferences.getString(BookStore.userUID))
+          .document(BookStoreUsers.sharedPreferences
+              .getString(BookStoreUsers.userUID))
           .updateData({'url': userImageUrl})
           .then((value) => print("User Updated"))
           .catchError((error) => print("Failed to update user: $error"));
@@ -165,16 +162,4 @@ class _ProfilePicState extends State<ProfilePic> {
         },
       );
   }
-
-
-
-
-
-
-
-
-
-
-
-
 }

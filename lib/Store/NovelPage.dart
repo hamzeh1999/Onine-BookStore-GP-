@@ -1,24 +1,16 @@
+import 'package:clay_containers/widgets/clay_container.dart';
+import 'package:clay_containers/widgets/clay_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gradproject/Store/Home.dart';
-import 'file:///D:/GradProject/lib/Book_Details/product_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gradproject/Widgets/customAppBar.dart';
 import 'package:gradproject/Config/config.dart';
-import '../Widgets/loadingWidget.dart';
 import '../Widgets/myDrawer.dart';
 import '../Models/Book.dart';
 
-//double width;
-//double height;
-
 class NovelsPage extends StatefulWidget {
-
-
-
-
   @override
   _NovelsPageState createState() => _NovelsPageState();
 }
@@ -29,88 +21,84 @@ class _NovelsPageState extends State<NovelsPage> {
     Size screenSize = MediaQuery.of(context).size;
 
     //  width = MediaQuery.of(context).size.width;
-  //  height = MediaQuery.of(context).size.height;
+    //  height = MediaQuery.of(context).size.height;
 
     return SafeArea(
       child: WillPopScope(
-        onWillPop: (){Navigator.pop(context);},
+        onWillPop: () {
+          Navigator.pop(context);
+        },
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: MyAppBar(),
           drawer: ClipRRect(
             borderRadius: BorderRadius.only(
-                topRight: Radius.circular(44), bottomRight: Radius.circular(44)),
-            child: MyDrawer(),),
+                topRight: Radius.circular(44),
+                bottomRight: Radius.circular(44)),
+            child: MyDrawer(),
+          ),
           body: SingleChildScrollView(
             child: Column(
               children: [
-
-                SizedBox(height:screenSize.height*0.001),
-                Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.all(15.0),
-                  padding: EdgeInsets.symmetric(
-                    horizontal:10.0 ,
-                    vertical: 10.0,
+                SizedBox(height: screenSize.height * 0.025),
+                ClayContainer(
+                  color: Color(0xFFDC5F1C),
+                  height: 95,
+                  width: 390,
+                  customBorderRadius: BorderRadius.only(
+                    topRight: Radius.elliptical(150, 150),
+                    bottomLeft: Radius.circular(50),
                   ),
-                  decoration: BoxDecoration(
-                    color: Color(0xFF4A3298),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-
-
-                  child: Text.rich(
-                    TextSpan(
-                      style: TextStyle(color: Colors.white),
-                      children: [
-                        //    TextSpan(text: "Book Store\n"),
-                        TextSpan(
-                          text: "Welcome To Novels Books",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: ClayText(
+                        "Welcome To Novels Books",
+                        emboss: false,
+                        size: 25,
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
                     ),
                   ),
-
-
                 ),
+                SizedBox(height: screenSize.height * 0.025),
                 Container(
-                  width:screenSize.width*4.0,
-                  height:screenSize.height*0.66,
+                  width: screenSize.width * 4.0,
+                  height: screenSize.height * 0.66,
                   child: CustomScrollView(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     slivers: [
                       StreamBuilder<QuerySnapshot>(
                         stream: Firestore.instance
-                            .collection("Books").where("category",isEqualTo: "Novels" )
+                            .collection("Books")
+                            .where("category", isEqualTo: "Novels")
                             .orderBy("publishedDate", descending: true)
                             .snapshots(),
                         builder: (context, dataSnapShot) {
                           return !dataSnapShot.hasData
                               ? SliverToBoxAdapter(
-                                child:Center(
-                                    child: Text("There are no Novels books",
-                                      style: TextStyle(
-                                          fontSize: 25,
-                                          color: Colors.blue),)),
-                          )
+                                  child: Center(
+                                      child: Text(
+                                    "There are no Novels books",
+                                    style: TextStyle(
+                                        fontSize: 25, color: Colors.blue),
+                                  )),
+                                )
                               : SliverStaggeredGrid.countBuilder(
-                            crossAxisCount: 1,
-                            staggeredTileBuilder: (c) => StaggeredTile.fit(1),
-                            itemBuilder: (context, index) {
+                                  crossAxisCount: 1,
+                                  staggeredTileBuilder: (c) =>
+                                      StaggeredTile.fit(1),
+                                  itemBuilder: (context, index) {
+                                    BookStoreUsers.transporterNovels =
+                                        dataSnapShot.data.documents.length;
 
-                              BookStore.transporterNovels=dataSnapShot.data.documents.length;
-
-                              Book model = Book.fromJson(
-                                  dataSnapShot.data.documents[index].data);
-                              return sourceInfo(model, context);
-                            },
-                            itemCount: dataSnapShot.data.documents.length,
-                          );
+                                    Book model = Book.fromJson(dataSnapShot
+                                        .data.documents[index].data);
+                                    return sourceInfo(model, context);
+                                  },
+                                  itemCount: dataSnapShot.data.documents.length,
+                                );
                         },
                       ),
                     ],
@@ -123,8 +111,4 @@ class _NovelsPageState extends State<NovelsPage> {
       ),
     );
   }
-
 }
-
-
-
