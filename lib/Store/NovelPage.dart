@@ -16,6 +16,15 @@ class NovelsPage extends StatefulWidget {
 }
 
 class _NovelsPageState extends State<NovelsPage> {
+
+
+
+
+  String selectedPurpose = "choice purpose :";
+  String purpose = "";
+
+
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -62,6 +71,109 @@ class _NovelsPageState extends State<NovelsPage> {
                   ),
                 ),
                 SizedBox(height: screenSize.height * 0.025),
+
+                ListTile(
+                  leading: Icon(
+                    Icons.link,
+                    color: Colors.red,
+                  ),
+                  title: Container(
+                    width: 250.0,
+                    child: DropdownButton(
+                      value: this.selectedPurpose,
+                      hint: Text(
+                        "purpose : ",
+                        style: TextStyle(color: Colors.pink),
+                      ),
+                      items: [
+                        DropdownMenuItem(
+                          child: Row(
+                            children: [
+                              //Icon(Icons.logout),
+                              SizedBox(
+                                width: 2.0,
+                              ),
+                              Text("Sale"),
+                            ],
+                          ),
+                          value: "Sale",
+                        ),
+                        DropdownMenuItem(
+                          child: Row(
+                            children: [
+                              //Icon(Icons.favorite_border_outlined,color:Colors.red),
+                              SizedBox(
+                                width: 2.0,
+                              ),
+                              Text("Donation or Exchange"),
+                            ],
+                          ),
+                          value: "Donation or Exchange",
+                        ),
+                        DropdownMenuItem(
+                          child: Row(
+                            children: [
+                              //Icon(Icons.favorite_border_outlined,color:Colors.red),
+                              SizedBox(
+                                width: 2.0,
+                              ),
+                              Text("Donation"),
+                            ],
+                          ),
+                          value: "Donation",
+                        ),
+                        DropdownMenuItem(
+                          child: Row(
+                            children: [
+                              //Icon(Icons.favorite_border_outlined,color:Colors.red),
+                              SizedBox(
+                                width: 2.0,
+                              ),
+                              Text("Exchange"),
+                            ],
+                          ),
+                          value: "Exchange",
+                        ),
+                        DropdownMenuItem(
+                          child: Row(
+                            children: [
+                              //Icon(Icons.favorite_border_outlined,color:Colors.red),
+                              SizedBox(
+                                width: 2.0,
+                              ),
+                              Text("Sale or Exchange "),
+                            ],
+                          ),
+                          value: "Sale or Exchange",
+                        ),
+                        DropdownMenuItem(
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 2.0,
+                              ),
+                              Text("choice purpose :",
+                                  style: TextStyle(color: Colors.red)),
+                            ],
+                          ),
+                          value: "choice purpose :",
+                        ),
+                      ],
+                      onChanged: (String value) {
+                        purpose = value;
+                        setState(() {
+                          this.selectedPurpose = value;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+
+
+
+
+
+
                 Container(
                   width: screenSize.width * 4.0,
                   height: screenSize.height * 0.66,
@@ -69,38 +181,73 @@ class _NovelsPageState extends State<NovelsPage> {
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     slivers: [
-                      StreamBuilder<QuerySnapshot>(
-                        stream: Firestore.instance
-                            .collection("Books")
-                            .where("category", isEqualTo: "Novels")
-                            .orderBy("publishedDate", descending: true)
-                            .snapshots(),
-                        builder: (context, dataSnapShot) {
-                          return !dataSnapShot.hasData
-                              ? SliverToBoxAdapter(
-                                  child: Center(
-                                      child: Text(
+
+
+                      if(purpose=="choice purpose :" || purpose.isEmpty)
+                        StreamBuilder<QuerySnapshot>(
+                          stream: Firestore.instance
+                              .collection("Books")
+                              .where("category", isEqualTo: "Novels")
+                              .orderBy("publishedDate", descending: true)
+                              .snapshots(),
+                          builder: (context, dataSnapShot) {
+
+                            return !dataSnapShot.hasData
+                                ? SliverToBoxAdapter(
+                              child: Center(
+                                  child: Text(
                                     "There are no Novels books",
                                     style: TextStyle(
                                         fontSize: 25, color: Colors.blue),
                                   )),
-                                )
-                              : SliverStaggeredGrid.countBuilder(
-                                  crossAxisCount: 1,
-                                  staggeredTileBuilder: (c) =>
-                                      StaggeredTile.fit(1),
-                                  itemBuilder: (context, index) {
-                                    BookStoreUsers.transporterNovels =
-                                        dataSnapShot.data.documents.length;
+                            )
+                                : SliverStaggeredGrid.countBuilder(
+                              crossAxisCount: 1,
+                              staggeredTileBuilder: (c) =>
+                                  StaggeredTile.fit(1),
+                              itemBuilder: (context, index) {
+                                Book model = Book.fromJson(dataSnapShot
+                                    .data.documents[index].data);
+                                return sourceInfo(model, context);
+                              },
+                              itemCount: dataSnapShot.data.documents.length,
+                            );
+                          },
+                        ),
 
-                                    Book model = Book.fromJson(dataSnapShot
-                                        .data.documents[index].data);
-                                    return sourceInfo(model, context);
-                                  },
-                                  itemCount: dataSnapShot.data.documents.length,
-                                );
-                        },
-                      ),
+                      if(selectedPurpose!="choice purpose :")
+                        StreamBuilder<QuerySnapshot>(
+                          stream: Firestore.instance
+                              .collection("Books")
+                              .where('purpose',isEqualTo: purpose)
+                              .where("category", isEqualTo: "Novels")
+                              .orderBy("publishedDate", descending: true)
+                              .snapshots(),
+                          builder: (context, dataSnapShot) {
+
+                            return !dataSnapShot.hasData
+                                ? SliverToBoxAdapter(
+                              child: Center(
+                                  child: Text(
+                                    "There are no Novels books",
+                                    style: TextStyle(
+                                        fontSize: 25, color: Colors.blue),
+                                  )),
+                            )
+                                : SliverStaggeredGrid.countBuilder(
+                              crossAxisCount: 1,
+                              staggeredTileBuilder: (c) =>
+                                  StaggeredTile.fit(1),
+                              itemBuilder: (context, index) {
+                                Book model = Book.fromJson(dataSnapShot
+                                    .data.documents[index].data);
+                                return sourceInfo(model, context);
+                              },
+                              itemCount: dataSnapShot.data.documents.length,
+                            );
+                          },
+                        ),
+
                     ],
                   ),
                 ),

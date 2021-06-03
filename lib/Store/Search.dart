@@ -23,54 +23,67 @@ class _SearchProductState extends State<SearchProduct> {
 
   Stream<QuerySnapshot> documnetList;
 
-  Future initSearch(String query) async {
+  Future initSearch(String query,String city,String category) async {
     String capitalizedValue = query.toUpperCase();
 
-    if (category.isNotEmpty &&
-        category != "choice category :" &&
-        city.isNotEmpty &&
-        city != "choice city :") {
+
+    if (category.isNotEmpty && category != "choice category :"
+        && city.isNotEmpty && city != "choice city :")
+    {
       print(
           "........................................................... just city and category");
 
       documnetList = Firestore.instance
           .collection('Books')
-          .where('caseSearch', arrayContains: capitalizedValue)
           .where("city", isEqualTo: city)
           .where("category", isEqualTo: category)
           .snapshots();
-    } else if (city.isNotEmpty && city != "choice city :") {
-      print(
-          "........................................................... just city");
+    }
+
+    else if (city.isNotEmpty && city != "choice city :")
+    {
+      print("........................................................... just city $capitalizedValue");
 
       documnetList = Firestore.instance
           .collection('Books')
-          .where('caseSearch', arrayContains: capitalizedValue)
           .where("city", isEqualTo: city)
           .snapshots();
-    } else if (category.isNotEmpty && category != "choice category :") {
-      print(
-          "........................................................... just name category");
+    }
+
+    else if (category.isNotEmpty && category != "choice category :")
+      {
+      print("........................................................... just name category");
 
       documnetList = Firestore.instance
           .collection('Books')
-          .where('caseSearch', arrayContains: capitalizedValue)
           .where("category", isEqualTo: category)
           .snapshots();
-    } else if (category.isEmpty ||
-        category == "choice category :" ||
-        city.isEmpty ||
-        city != "choice city :") {
-      print(
-          "........................................................... nothing");
+    }
+
+    else if (category.isEmpty || category == "choice category :" || city.isEmpty || city != "choice city :")
+      {
+      print("........................................................... nothing");
       documnetList = Firestore.instance
           .collection('Books')
+
           .where('caseSearch', arrayContains: capitalizedValue)
           .snapshots();
     }
 
+
+
+
+
+
+
+
+
     setState(() {});
   }
+
+
+  final TextEditingController searchController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +154,7 @@ class _SearchProductState extends State<SearchProduct> {
                     ),
                   ),
                   child: TextField(
+                    controller: searchController,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       prefixIcon: Icon(
@@ -155,10 +169,10 @@ class _SearchProductState extends State<SearchProduct> {
                             style: BorderStyle.solid),
                       ),
                     ),
-                    onChanged: (value) {
-                      //capitalizedValue=value.toUpperCase();
-                      initSearch(value);
-                    },
+                    // onChanged: (value) {
+                    //   //capitalizedValue=value.toUpperCase();
+                    //   initSearch(value);
+                    // },
                   ),
                 ),
                 SizedBox(
@@ -334,7 +348,7 @@ class _SearchProductState extends State<SearchProduct> {
                                 Text("choice city :"),
                               ],
                             ),
-                            value: " choice city :",
+                            value: "choice city :",
                           ),
                         ],
                         onChanged: (String value) {
@@ -430,6 +444,35 @@ class _SearchProductState extends State<SearchProduct> {
                   height: screenSize.height * 0.01,
                 ),
                 SizedBox(height: screenSize.height * 0.001),
+
+                ElevatedButton(
+                  onPressed: () {
+                    initSearch(searchController.text,city=='choice city :'?"":city,category=='choice category :'?"":category);
+                  },
+                  style: OutlinedButton.styleFrom(
+                    elevation: 9,
+                    backgroundColor: Colors.lightBlueAccent,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
+                  child: Text(
+                    'Search',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+
+
+
+
+
                 Container(
                   width: screenSize.width * 4.0,
                   height: screenSize.height * 0.66,

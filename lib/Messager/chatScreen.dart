@@ -24,7 +24,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Stream messageStream;
   File file;
   String messagePictureUrl;
-
+String nameTall;
   @override
   void initState() {
     // TODO: implement initState
@@ -37,6 +37,15 @@ class _ChatScreenState extends State<ChatScreen> {
     print(chatRoomId +
         "...................................................................................................");
     //getAndSetMessages();
+  
+  if(widget.hisName.length>15)
+   {
+     nameTall=widget.hisName.substring(0,12);
+  nameTall=nameTall+"....";
+   }
+  else
+    nameTall=widget.hisName;
+
   }
 
   getChatRoomIdByUsernames(String myName, String hisName) {
@@ -85,11 +94,10 @@ class _ChatScreenState extends State<ChatScreen> {
               width: screenSize.width * 0.01,
             ),
             Center(
-                child: Text(
-              widget.hisName,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            )),
+              child: Text(
+              nameTall,
+              ),
+            ),
             SizedBox(
               width: screenSize.width * 0.3,
             ),

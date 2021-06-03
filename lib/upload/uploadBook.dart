@@ -494,10 +494,10 @@ class _UploadPageState
                           SizedBox(
                             width: 2.0,
                           ),
-                          Text("Zarga"),
+                          Text("Zarqa"),
                         ],
                       ),
-                      value: "Zarga",
+                      value: "Zarqa",
                     ),
                     DropdownMenuItem(
                       child: Row(

@@ -267,12 +267,25 @@ class ChatRoomListTile extends StatefulWidget {
 }
 
 class _ChatRoomListTileState extends State<ChatRoomListTile> {
-  String profilePicUrl, hisName;
+  String profilePicUrl, hisName,nameTall;
 
   @override
   void initState() {
     //  getUserInfo();
     super.initState();
+
+
+    // if(hisName.length>15)
+    // {
+    //   nameTall=hisName.substring(0,12);
+    //   nameTall=nameTall+"...";
+    // }
+    // else
+    //   nameTall=hisName;
+    //
+
+
+
   }
 
   @override
@@ -304,7 +317,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
         BookStoreUsers.sharedPreferences.getString(BookStoreUsers.userName))
       showTalk = 'Me';
     else
-      showTalk = widget.lastMessageSendBy;
+      showTalk = widget.lastMessageSendBy.length>15?widget.lastMessageSendBy.substring(0,12)+"...":widget.lastMessageSendBy;
 
     return GestureDetector(
       onTap: () {
