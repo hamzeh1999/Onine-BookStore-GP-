@@ -146,23 +146,24 @@ Widget sourceInfo(BookPdf book, BuildContext context) {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            AspectRatio(
-              aspectRatio: 1.19,
-              child: Container(
-                padding: EdgeInsets.all((20 / 375.0) * sizeScreen.width),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Image.network(book.urlPicture),
+            Container(
+              padding: EdgeInsets.all((10 / 375.0) * sizeScreen.width),
+              decoration: BoxDecoration(
+                color: Colors.blueAccent,
+                borderRadius: BorderRadius.circular(15),
               ),
+              child: Image.network(book.urlPicture),
             ),
             //const SizedBox(height:3),
             Flexible(
               child: Text(
                 book.name,
                 //overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic),
               ),
             ),
             Row(

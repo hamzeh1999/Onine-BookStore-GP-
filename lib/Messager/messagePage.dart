@@ -114,8 +114,7 @@ class _messagePageState extends State<messagePage> {
                                       StaggeredTile.fit(1),
                                   itemBuilder: (context, index) {
                                     DataUser user = DataUser.fromJson(
-                                        dataSnapShot
-                                            .data.documents[index].data);
+                                        dataSnapShot.data.documents[index].data);
                                     return searchListUserTile(user, context);
                                   },
                                   itemCount: dataSnapShot.data.documents.length,
@@ -209,9 +208,11 @@ class _messagePageState extends State<messagePage> {
         .get();
 
     if (snapShot.exists) {
-      // chatroom already exists
+      // chatroom already exists it dont need build new one
       return true;
-    } else {
+    }
+    else
+      {
       // chatroom does not exists let is build one
       return Firestore.instance
           .collection("chatrooms")
@@ -227,8 +228,7 @@ class _messagePageState extends State<messagePage> {
       stream: Firestore.instance
           .collection("chatrooms")
           .orderBy("lastMessageSendTs", descending: true)
-          .where("users",
-              arrayContains: BookStoreUsers.sharedPreferences
+          .where("users", arrayContains: BookStoreUsers.sharedPreferences
                   .getString(BookStoreUsers.userUID))
           .snapshots(),
       builder: (context, snapshot) {
@@ -252,6 +252,19 @@ class _messagePageState extends State<messagePage> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class ChatRoomListTile extends StatefulWidget {
   final String lastMessage, uid, lastMessageSendBy;
@@ -290,8 +303,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "build :::::::::::::::::::::::::::::::::::::::::::build build build::::::::::::::::::::::::::::::::::::build build ....");
+    print("I am now in build function for chat room list tile..............................................................................");
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
           .collection("users")
@@ -299,8 +311,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
           .snapshots(),
       builder: (context, dataSnapShot) {
         if (dataSnapShot.hasData) {
-          print(
-              "Entter enter enter if enter if enter if enter if enter if ;';';'';;'';';';';';';';';';';';';';';';';';';;';';'';';");
+          print("I am now in if statement function builder  for chat room list tile..............................................................................");
           DataUser user =
               DataUser.fromJson(dataSnapShot.data.documents[0].data);
           return smallPicture(user);

@@ -285,7 +285,7 @@ class _RegisterState extends State<Register> {
       "phoneNumber": _numberTextEditingController.text.trim(),
       "password": _passwordtextEditingController.text.trim(),
       "caseSearch":
-          setSearchParam(_nametextEditingController.text.toUpperCase()),
+          setSearchParam(_nametextEditingController.text.trim().toUpperCase()),
     });
     await BookStoreUsers.sharedPreferences
         .setString(BookStoreUsers.userUID, fuser.uid);

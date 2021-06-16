@@ -287,15 +287,27 @@ class _ProductPageState extends State<ProductPage> {
           Visibility(
             visible: showNumber,
             child: InkWell(
+
+
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ChatScreen(
+                  var chatRoomId = getChatRoomIdByUsernames(
+                      BookStoreUsers.sharedPreferences.getString(BookStoreUsers.userUID),
+                      user.uid);
+                  Map<String, dynamic> chatRoomInformation = {
+                    "users": [
+                      BookStoreUsers.sharedPreferences.getString(BookStoreUsers.userUID),
+                      user.uid
+                    ]
+                  };
+                  createChatRoom(chatRoomId, chatRoomInformation);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChatScreen(
                               hisName: user.Name,
                               profilePicUrl: user.url,
-                              hisUid: user.uid,
-                            )));
+                              hisUid: user.uid)));
+
               },
               child: Container(
                 color: Colors.white,
@@ -325,5 +337,34 @@ class _ProductPageState extends State<ProductPage> {
         ]),
       ),
     );
+  }
+
+  getChatRoomIdByUsernames(String myName, String hisName) {
+    if (myName.substring(0, 1).codeUnitAt(0) >
+        hisName.substring(0, 1).codeUnitAt(0)) {
+      return "$hisName\_$myName";
+    } else {
+      return "$myName\_$hisName";
+    }
+  }
+
+  createChatRoom(String chatRoomId, Map chatRoomInformation) async {
+    final snapShot = await Firestore.instance
+        .collection("chatrooms")
+        .document(chatRoomId)
+        .get();
+
+    if (snapShot.exists) {
+      // chatroom already exists it dont need build new one
+      return true;
+    }
+    else
+    {
+      // chatroom does not exists let is build one
+      return Firestore.instance
+          .collection("chatrooms")
+          .document(chatRoomId)
+          .setData(chatRoomInformation);
+    }
   }
 }

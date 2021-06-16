@@ -22,10 +22,13 @@ class _MyPasswordState extends State<MyPassword> {
       TextEditingController();
   final TextEditingController _cpasswordtextEditingController =
       TextEditingController();
+  final TextEditingController _c1passwordtextEditingController =
+  TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
+    bool showPass=false;
 
     return SafeArea(
       child: Scaffold(
@@ -41,37 +44,37 @@ class _MyPasswordState extends State<MyPassword> {
               SizedBox(
                 height: screenSize.height * 0.09,
               ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: screenSize.width * 0.05,
-                  ),
-                  Text(
-                    "Your Password : ",
-                    style: TextStyle(fontSize: 20, color: Colors.black),
-                  ),
-                  SizedBox(
-                    width: screenSize.width * 0.02,
-                  ),
-                  Flexible(
-                    child: Text(
-                      widget.user.password,
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     SizedBox(
+              //       width: screenSize.width * 0.05,
+              //     ),
+              //     Text(
+              //       "Your Password : ",
+              //       style: TextStyle(fontSize: 20, color: Colors.black),
+              //     ),
+              //     SizedBox(
+              //       width: screenSize.width * 0.02,
+              //     ),
+              //     Flexible(
+              //       child: Text(
+              //         widget.user.password,
+              //         style: TextStyle(
+              //           fontSize: 20,
+              //           color: Colors.black,
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
               SizedBox(
                 height: screenSize.height * 0.04,
               ),
               CustomTextField(
                 data: Icons.lock_outline,
-                hintText: "write your new password",
+                hintText: "write your old password",
                 specifer: 1,
-                isObsecure: false,
+                isObsecure: true,
                 controller: _passwordTextEditingController,
               ),
               SizedBox(
@@ -81,9 +84,24 @@ class _MyPasswordState extends State<MyPassword> {
                 data: Icons.lock_outline,
                 hintText: "write your new password",
                 specifer: 1,
-                isObsecure: false,
+                isObsecure: true,
                 controller: _cpasswordtextEditingController,
               ),
+              SizedBox(
+                height: screenSize.height * 0.04,
+              ),
+              CustomTextField(
+                data: Icons.lock_outline,
+                hintText: "write your new password again ",
+                specifer: 1,
+                isObsecure: true,
+                controller: _c1passwordtextEditingController,
+              ),
+
+
+
+
+
               SizedBox(
                 height: screenSize.height * 0.09,
               ),
@@ -118,12 +136,15 @@ class _MyPasswordState extends State<MyPassword> {
   }
 
   updateDataToFirebase() async {
-    if (_passwordTextEditingController.text.isNotEmpty) {
-      if (_passwordTextEditingController.text ==
+    if(BookStoreUsers.sharedPreferences
+        .getString(BookStoreUsers.userPassword).toString()
+        ==_passwordTextEditingController.text)
+    {
+      if (_c1passwordtextEditingController.text ==
           _cpasswordtextEditingController.text) {
         FirebaseUser firebaseUser = await BookStoreUsers.auth.currentUser();
         await firebaseUser
-            .updatePassword(_passwordTextEditingController.text)
+            .updatePassword(_cpasswordtextEditingController.text)
             .then(
           (value) async {
             Fluttertoast.showToast(
@@ -139,24 +160,29 @@ class _MyPasswordState extends State<MyPassword> {
                 .collection("users")
                 .document(BookStoreUsers.sharedPreferences
                     .getString(BookStoreUsers.userUID))
-                .updateData({'password': _passwordTextEditingController.text})
-                .then((value) => print("User Updated in fireStore"))
+                .updateData({'password': _cpasswordtextEditingController.text})
+                .then((value) => print("User Updated in fireStore..................................."))
                 .catchError((error) =>
-                    print("Failed to update user in firestore: $error"));
+                    print("Failed to update user in firestore.............................: $error"));
 
             _passwordTextEditingController.clear();
+            _cpasswordtextEditingController.clear();
+            _c1passwordtextEditingController.clear();
+
+
           },
         ).catchError((onError) {
           showDialog(
             context: context,
             builder: (c) {
               return ErrorAlertDialog(
-                message: "Your password should be more than 6 characters .",
+                message: "write your password correctly.",
               );
             },
           );
         });
-      } else {
+      }
+      else {
         showDialog(
           context: context,
           builder: (c) {
@@ -166,12 +192,13 @@ class _MyPasswordState extends State<MyPassword> {
           },
         );
       }
-    } else {
+    }
+    else {
       showDialog(
         context: context,
         builder: (c) {
           return ErrorAlertDialog(
-            message: "fill your password ",
+            message: "your old password does not correct",
           );
         },
       );

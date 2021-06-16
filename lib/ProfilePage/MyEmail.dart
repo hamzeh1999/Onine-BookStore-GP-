@@ -37,9 +37,7 @@ class _MyEmailState extends State<MyEmail> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                height: screenSize.height * 0.09,
-              ),
+              SizedBox(height: 160.0),
               Row(
                 children: [
                   SizedBox(
@@ -47,7 +45,11 @@ class _MyEmailState extends State<MyEmail> {
                   ),
                   Text(
                     "Your Email : ",
-                    style: TextStyle(fontSize: 20, color: Colors.black),
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic),
                   ),
                   SizedBox(
                     width: screenSize.width * 0.02,

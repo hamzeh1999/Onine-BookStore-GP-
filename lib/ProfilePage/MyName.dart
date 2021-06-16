@@ -35,9 +35,8 @@ class _MyNameState extends State<MyName> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                height: screenSize.height * 0.09,
-              ),
+              SizedBox(height: 160.0),
+
               Row(
                 children: [
                   SizedBox(
@@ -45,7 +44,12 @@ class _MyNameState extends State<MyName> {
                   ),
                   Text(
                     "Your Name : ",
-                    style: TextStyle(fontSize: 20, color: Colors.black),
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic),
+
                   ),
                   SizedBox(
                     width: screenSize.width * 0.02,

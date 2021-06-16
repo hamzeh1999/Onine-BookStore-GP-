@@ -86,16 +86,16 @@ class _pdfUploadState extends State<pdfUpload> {
     if (_nametextEditingController.text.isNotEmpty) {
       String pdfID = DateTime.now().microsecondsSinceEpoch.toString();
 
-      print("zero function....................................");
 
       File file = await FilePicker.getFile(type: FileType.custom);
-      print("zero 1 function....................................");
 
       String fileName = "$pdfID";
-      print("z\ero 2 function....................................");
 
+      if(file!=null)
       savePDF(file, fileName);
-    } else {
+
+    }
+    else {
       displayDialog("Please fill name of  pdf Book ..");
     }
   }
@@ -119,25 +119,23 @@ class _pdfUploadState extends State<pdfUpload> {
           );
         });
 
-    print("first function....................................");
 
-    final StorageReference storageReference =
-        FirebaseStorage.instance.ref().child("PDFBooks");
-    print(
-        "pdf file.. before...........................................................");
-    StorageUploadTask uploadTask =
-        storageReference.child("pdfBook_$fileName").putFile(file);
-    print("pdf file....... after............................................");
+    final StorageReference storageReference = FirebaseStorage.instance.ref().child("PDFBooks");
+
+    StorageUploadTask uploadTask = storageReference.child("pdfBook_$fileName").putFile(file);
+
+
+
+    print("storing in firebase fished and start now download url of pdf book ");
 
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-    print("first after.......... url....................................");
+
     String url = await taskSnapshot.ref.getDownloadURL();
 
     documentFileUpload(url, fileName);
   }
 
   void documentFileUpload(String url, String name) {
-    print("seconad function....................................");
 
     Firestore.instance.collection("BookPdf").document(name).setData({
       "urlPicture":
@@ -148,7 +146,7 @@ class _pdfUploadState extends State<pdfUpload> {
       "name": _nametextEditingController.text,
       "uid": BookStoreUsers.sharedPreferences.getString(BookStoreUsers.userUID),
     }).then((value) {
-      print("book pdf uploaded................");
+      print("book pdf uploaded......................................................................");
     });
 
     _nametextEditingController.clear();
